@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "com.redlab.utang.app-mergeDebugResources-36:/layout/item_debtor.xml",
+        "source": "com.redlab.utang.app-main-39:/layout/item_debtor.xml"
+    },
+    {
+        "merged": "com.redlab.utang.app-mergeDebugResources-36:/layout/activity_main.xml",
+        "source": "com.redlab.utang.app-main-39:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.redlab.utang.app-mergeDebugResources-36:/layout/activity_add_debtor.xml",
+        "source": "com.redlab.utang.app-main-39:/layout/activity_add_debtor.xml"
+    },
+    {
+        "merged": "com.redlab.utang.app-mergeDebugResources-36:/layout/activity_debtor_detail.xml",
+        "source": "com.redlab.utang.app-main-39:/layout/activity_debtor_detail.xml"
+    },
+    {
+        "merged": "com.redlab.utang.app-mergeDebugResources-36:/layout/dialog_payment.xml",
+        "source": "com.redlab.utang.app-main-39:/layout/dialog_payment.xml"
+    },
+    {
+        "merged": "com.redlab.utang.app-mergeDebugResources-36:/layout/item_payment.xml",
+        "source": "com.redlab.utang.app-main-39:/layout/item_payment.xml"
+    }
+]
