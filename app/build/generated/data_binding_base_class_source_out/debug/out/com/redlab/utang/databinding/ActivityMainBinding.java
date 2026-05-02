@@ -34,14 +34,18 @@ public final class ActivityMainBinding implements ViewBinding {
   @NonNull
   public final TextView tvEmpty;
 
+  @NonNull
+  public final TextView tvStoreName;
+
   private ActivityMainBinding(@NonNull CoordinatorLayout rootView, @NonNull EditText etSearch,
       @NonNull FloatingActionButton fabAddDebtor, @NonNull RecyclerView recyclerViewDebtors,
-      @NonNull TextView tvEmpty) {
+      @NonNull TextView tvEmpty, @NonNull TextView tvStoreName) {
     this.rootView = rootView;
     this.etSearch = etSearch;
     this.fabAddDebtor = fabAddDebtor;
     this.recyclerViewDebtors = recyclerViewDebtors;
     this.tvEmpty = tvEmpty;
+    this.tvStoreName = tvStoreName;
   }
 
   @Override
@@ -95,8 +99,14 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tvStoreName;
+      TextView tvStoreName = ViewBindings.findChildViewById(rootView, id);
+      if (tvStoreName == null) {
+        break missingId;
+      }
+
       return new ActivityMainBinding((CoordinatorLayout) rootView, etSearch, fabAddDebtor,
-          recyclerViewDebtors, tvEmpty);
+          recyclerViewDebtors, tvEmpty, tvStoreName);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

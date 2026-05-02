@@ -22,6 +22,9 @@ public interface PaymentRecordDao {
     @Query("SELECT * FROM payment_records WHERE debtorId = :debtorId ORDER BY paymentDate DESC")
     LiveData<List<PaymentRecord>> getPaymentsForDebtor(long debtorId);
 
-    @Query("SELECT * FROM payment_records WHERE debtorId = :debtorId ORDER BY paymentDate DESC")
+    @Query("SELECT * FROM payment_records WHERE debtorId = :debtorId ORDER BY paymentDate ASC")
     List<PaymentRecord> getPaymentsForDebtorSync(long debtorId);
+
+    @Query("SELECT * FROM payment_records ORDER BY paymentDate DESC")
+    List<PaymentRecord> getAllPaymentsSync();
 }

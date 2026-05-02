@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_light">
@@ -10,9 +11,7 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <!-- Card: Customer Info -->
         <androidx.cardview.widget.CardView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="12dp"
@@ -25,129 +24,46 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                     android:text="👤 Impormasyon ng Customer"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/primary"
-                    android:layout_marginBottom="12dp" />
+                    android:textSize="15sp" android:textStyle="bold"
+                    android:textColor="@color/primary" android:layout_marginBottom="12dp"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Pangalan *"
-                    android:textSize="13sp"
-                    android:textColor="@color/text_secondary" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Pangalan *" android:textSize="13sp" android:textColor="@color/text_secondary"/>
+                <EditText android:id="@+id/etName" android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:hint="Buong pangalan ng nagkakautang"
+                    android:inputType="textPersonName|textCapWords" android:textSize="15sp"
+                    android:layout_marginBottom="12dp"/>
 
-                <EditText
-                    android:id="@+id/etName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Buong pangalan ng nagkakautang"
-                    android:inputType="textPersonName|textCapWords"
-                    android:textSize="15sp"
-                    android:layout_marginBottom="12dp" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Halaga ng Utang (₱) *" android:textSize="13sp" android:textColor="@color/text_secondary"/>
+                <EditText android:id="@+id/etAmount" android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:hint="0.00"
+                    android:inputType="numberDecimal" android:textSize="15sp"
+                    android:layout_marginBottom="12dp"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Halaga ng Utang (₱) *"
-                    android:textSize="13sp"
-                    android:textColor="@color/text_secondary" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="📈 Interest / Penalty Rate (% bawat buwan, opsyonal)"
+                    android:textSize="13sp" android:textColor="@color/text_secondary"/>
+                <EditText android:id="@+id/etInterestRate" android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:hint="0  (hal: 5 para sa 5%)"
+                    android:inputType="numberDecimal" android:textSize="15sp"
+                    android:layout_marginBottom="12dp"/>
 
-                <EditText
-                    android:id="@+id/etAmount"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="0.00"
-                    android:inputType="numberDecimal"
-                    android:textSize="15sp"
-                    android:layout_marginBottom="12dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Notes (opsyonal)"
-                    android:textSize="13sp"
-                    android:textColor="@color/text_secondary" />
-
-                <EditText
-                    android:id="@+id/etNotes"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Produkto, petsa, atbp."
-                    android:inputType="textMultiLine"
-                    android:lines="3"
-                    android:gravity="top"
-                    android:textSize="14sp" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Notes (opsyonal)" android:textSize="13sp" android:textColor="@color/text_secondary"/>
+                <EditText android:id="@+id/etNotes" android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:hint="Produkto, petsa, atbp."
+                    android:inputType="textMultiLine" android:lines="3"
+                    android:gravity="top" android:textSize="14sp"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Card: Fingerprint -->
-        <androidx.cardview.widget.CardView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp"
-            android:layout_marginBottom="16dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🔏 I-register ang Fingerprint"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/primary"
-                    android:layout_marginBottom="6dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Ang fingerprint ay gagamitin bilang receipt tuwing magbabayad ang customer."
-                    android:textSize="13sp"
-                    android:textColor="@color/text_secondary"
-                    android:layout_marginBottom="12dp" />
-
-                <Button
-                    android:id="@+id/btnScanFingerprint"
-                    android:layout_width="match_parent"
-                    android:layout_height="52dp"
-                    android:text="👆 I-scan ang Fingerprint"
-                    android:textSize="15sp"
-                    android:backgroundTint="@color/primary"
-                    android:layout_marginBottom="10dp" />
-
-                <TextView
-                    android:id="@+id/tvFingerprintStatus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="⬆️ I-scan muna ang fingerprint"
-                    android:textSize="13sp"
-                    android:gravity="center"
-                    android:layout_gravity="center_horizontal"
-                    android:textColor="@color/text_secondary" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- Save button -->
-        <Button
-            android:id="@+id/btnSave"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
+        <Button android:id="@+id/btnSave"
+            android:layout_width="match_parent" android:layout_height="56dp"
             android:text="💾 I-save ang Customer"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:backgroundTint="@color/green_700"
-            android:layout_marginTop="4dp" />
-
+            android:textSize="16sp" android:textStyle="bold"
+            android:backgroundTint="@color/green_700"/>
     </LinearLayout>
 </ScrollView>

@@ -26,15 +26,22 @@ public interface DebtorDao {
     @Query("SELECT * FROM debtors ORDER BY name ASC")
     LiveData<List<Debtor>> getAllDebtorsAlphabetical();
 
+    @Query("SELECT * FROM debtors ORDER BY name ASC")
+    List<Debtor> getAllDebtorsSync();
+
     @Query("SELECT * FROM debtors WHERE id = :id")
     LiveData<Debtor> getDebtorById(long id);
 
     @Query("SELECT * FROM debtors WHERE id = :id")
     Debtor getDebtorByIdSync(long id);
 
-    @Query("UPDATE debtors SET amountPaid = amountPaid + :amount, " +
-           "isFullyPaid = CASE WHEN (amountPaid + :amount) >= totalAmount THEN 1 ELSE 0 END, " +
-           "fullyPaidDate = CASE WHEN (amountPaid + :amount) >= totalAmount THEN :date ELSE fullyPaidDate END " +
+    @Query("UPDATE debtors SET " +
+           "amountPaid = amountPaid + :amount, " +
+           "isFullyPaid = CASE WHEN (amountPaid + :amount) >= (totalAmount + penaltyAmount) THEN 1 ELSE 0 END, " +
+           "fullyPaidDate = CASE WHEN (amountPaid + :amount) >= (totalAmount + penaltyAmount) THEN :date ELSE fullyPaidDate END " +
            "WHERE id = :id")
     void addPayment(long id, double amount, String date);
+
+    @Query("UPDATE debtors SET penaltyAmount = penaltyAmount + :penalty WHERE id = :id")
+    void addPenalty(long id, double penalty);
 }

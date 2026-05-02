@@ -2,9 +2,9 @@ package com.redlab.utang.models;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
-import androidx.room.Ignore;
 
 @Entity(
     tableName = "payment_records",
@@ -23,44 +23,32 @@ public class PaymentRecord {
 
     private long debtorId;
     private double amount;
-    private String paymentDate;       // ISO date string
-    private String receiptType;       // "BIOMETRIC" or "PHOTO"
-    private String photoPath;         // path to photo if receiptType == PHOTO
-    private boolean biometricVerified;
+    private String paymentDate;
+    private String photoPath;       // path to timestamped photo receipt
+    private String recordType;      // "PAYMENT" or "PENALTY" or "INTEREST"
 
     public PaymentRecord() {}
 
     @Ignore
     public PaymentRecord(long debtorId, double amount, String paymentDate,
-                         String receiptType, String photoPath, boolean biometricVerified) {
-        this.debtorId = debtorId;
-        this.amount = amount;
+                         String photoPath, String recordType) {
+        this.debtorId    = debtorId;
+        this.amount      = amount;
         this.paymentDate = paymentDate;
-        this.receiptType = receiptType;
-        this.photoPath = photoPath;
-        this.biometricVerified = biometricVerified;
+        this.photoPath   = photoPath;
+        this.recordType  = recordType;
     }
-
-    // --- Getters & Setters ---
 
     public long getId() { return id; }
     public void setId(long id) { this.id = id; }
-
     public long getDebtorId() { return debtorId; }
     public void setDebtorId(long debtorId) { this.debtorId = debtorId; }
-
     public double getAmount() { return amount; }
     public void setAmount(double amount) { this.amount = amount; }
-
     public String getPaymentDate() { return paymentDate; }
     public void setPaymentDate(String paymentDate) { this.paymentDate = paymentDate; }
-
-    public String getReceiptType() { return receiptType; }
-    public void setReceiptType(String receiptType) { this.receiptType = receiptType; }
-
     public String getPhotoPath() { return photoPath; }
     public void setPhotoPath(String photoPath) { this.photoPath = photoPath; }
-
-    public boolean isBiometricVerified() { return biometricVerified; }
-    public void setBiometricVerified(boolean biometricVerified) { this.biometricVerified = biometricVerified; }
+    public String getRecordType() { return recordType; }
+    public void setRecordType(String recordType) { this.recordType = recordType; }
 }

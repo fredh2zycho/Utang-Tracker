@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.redlab.utang.app-mergeDebugResources-35:/values-v31/values-v31.xml",
+            "outputFile": "com.redlab.utang.app-mergeDebugResources-34:/values-v31/values-v31.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Admin\\.gradle\\caches\\8.12\\transforms\\691c3c025c1f73e07ed75c4c26cdc6a0\\transformed\\material-1.11.0\\res\\values-v31\\values-v31.xml",

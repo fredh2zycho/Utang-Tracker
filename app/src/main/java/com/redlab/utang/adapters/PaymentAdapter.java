@@ -3,6 +3,7 @@ package com.redlab.utang.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.redlab.utang.R;
@@ -25,12 +27,10 @@ public class PaymentAdapter extends RecyclerView.Adapter<PaymentAdapter.PaymentV
     private List<PaymentRecord> payments = new ArrayList<>();
     private final Context context;
 
-    public PaymentAdapter(Context context) {
-        this.context = context;
-    }
+    public PaymentAdapter(Context context) { this.context = context; }
 
     public void setPayments(List<PaymentRecord> payments) {
-        this.payments = payments;
+        this.payments = payments != null ? payments : new ArrayList<>();
         notifyDataSetChanged();
     }
 
@@ -43,58 +43,61 @@ public class PaymentAdapter extends RecyclerView.Adapter<PaymentAdapter.PaymentV
 
     @Override
     public void onBindViewHolder(@NonNull PaymentViewHolder holder, int position) {
-        PaymentRecord record = payments.get(position);
-        holder.bind(record);
+        holder.bind(payments.get(position));
     }
 
     @Override
     public int getItemCount() { return payments.size(); }
 
     class PaymentViewHolder extends RecyclerView.ViewHolder {
-        TextView tvAmount, tvDate, tvReceiptType;
-        ImageView ivReceiptPhoto;
-        View badgeBiometric, badgePhoto;
+        CardView cardView;
+        TextView tvAmount, tvDate, tvType;
+        ImageView ivPhoto;
 
-        PaymentViewHolder(@NonNull View itemView) {
-            super(itemView);
-            tvAmount      = itemView.findViewById(R.id.tvPaymentAmount);
-            tvDate        = itemView.findViewById(R.id.tvPaymentDate);
-            tvReceiptType = itemView.findViewById(R.id.tvReceiptType);
-            ivReceiptPhoto = itemView.findViewById(R.id.ivReceiptPhoto);
-            badgeBiometric = itemView.findViewById(R.id.badgeBiometric);
-            badgePhoto    = itemView.findViewById(R.id.badgePhoto);
+        PaymentViewHolder(@NonNull View v) {
+            super(v);
+            cardView  = v.findViewById(R.id.cardPayment);
+            tvAmount  = v.findViewById(R.id.tvPaymentAmount);
+            tvDate    = v.findViewById(R.id.tvPaymentDate);
+            tvType    = v.findViewById(R.id.tvReceiptType);
+            ivPhoto   = v.findViewById(R.id.ivReceiptPhoto);
         }
 
-        void bind(PaymentRecord record) {
-            tvAmount.setText(String.format("₱%.2f", record.getAmount()));
-            tvDate.setText(DateUtils.formatForDisplay(record.getPaymentDate()));
+        void bind(PaymentRecord pr) {
+            boolean isPenalty = "PENALTY".equals(pr.getRecordType());
 
-            if ("BIOMETRIC".equals(record.getReceiptType())) {
-                tvReceiptType.setText("🔏 Biometric Receipt");
-                badgeBiometric.setVisibility(View.VISIBLE);
-                badgePhoto.setVisibility(View.GONE);
-                ivReceiptPhoto.setVisibility(View.GONE);
+            tvDate.setText(DateUtils.formatForDisplay(pr.getPaymentDate()));
+
+            if (isPenalty) {
+                tvAmount.setText(String.format("+₱%.2f", pr.getAmount()));
+                tvAmount.setTextColor(Color.parseColor("#C62828"));
+                tvType.setText("⚠️ Penalty / Interest");
+                tvType.setTextColor(Color.parseColor("#C62828"));
+                cardView.setCardBackgroundColor(Color.parseColor("#FFF3E0"));
+                ivPhoto.setVisibility(View.GONE);
             } else {
-                tvReceiptType.setText("📷 Photo Receipt");
-                badgeBiometric.setVisibility(View.GONE);
-                badgePhoto.setVisibility(View.VISIBLE);
+                tvAmount.setText(String.format("₱%.2f", pr.getAmount()));
+                tvAmount.setTextColor(Color.parseColor("#2E7D32"));
+                tvType.setText("📷 Photo Receipt");
+                tvType.setTextColor(Color.parseColor("#1565C0"));
+                cardView.setCardBackgroundColor(Color.WHITE);
 
                 // Load photo thumbnail
-                if (record.getPhotoPath() != null && !record.getPhotoPath().isEmpty()) {
-                    File photoFile = new File(record.getPhotoPath());
-                    if (photoFile.exists()) {
-                        Bitmap bitmap = BitmapFactory.decodeFile(record.getPhotoPath());
-                        if (bitmap != null) {
-                            ivReceiptPhoto.setImageBitmap(bitmap);
-                            ivReceiptPhoto.setVisibility(View.VISIBLE);
+                if (pr.getPhotoPath() != null && !pr.getPhotoPath().isEmpty()) {
+                    File f = new File(pr.getPhotoPath());
+                    if (f.exists()) {
+                        Bitmap bm = BitmapFactory.decodeFile(pr.getPhotoPath());
+                        if (bm != null) {
+                            ivPhoto.setImageBitmap(bm);
+                            ivPhoto.setVisibility(View.VISIBLE);
                         } else {
-                            ivReceiptPhoto.setVisibility(View.GONE);
+                            ivPhoto.setVisibility(View.GONE);
                         }
                     } else {
-                        ivReceiptPhoto.setVisibility(View.GONE);
+                        ivPhoto.setVisibility(View.GONE);
                     }
                 } else {
-                    ivReceiptPhoto.setVisibility(View.GONE);
+                    ivPhoto.setVisibility(View.GONE);
                 }
             }
         }

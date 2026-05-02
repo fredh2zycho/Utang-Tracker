@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
@@ -25,10 +24,10 @@ public final class ActivityAddDebtorBinding implements ViewBinding {
   public final Button btnSave;
 
   @NonNull
-  public final Button btnScanFingerprint;
+  public final EditText etAmount;
 
   @NonNull
-  public final EditText etAmount;
+  public final EditText etInterestRate;
 
   @NonNull
   public final EditText etName;
@@ -36,19 +35,15 @@ public final class ActivityAddDebtorBinding implements ViewBinding {
   @NonNull
   public final EditText etNotes;
 
-  @NonNull
-  public final TextView tvFingerprintStatus;
-
   private ActivityAddDebtorBinding(@NonNull ScrollView rootView, @NonNull Button btnSave,
-      @NonNull Button btnScanFingerprint, @NonNull EditText etAmount, @NonNull EditText etName,
-      @NonNull EditText etNotes, @NonNull TextView tvFingerprintStatus) {
+      @NonNull EditText etAmount, @NonNull EditText etInterestRate, @NonNull EditText etName,
+      @NonNull EditText etNotes) {
     this.rootView = rootView;
     this.btnSave = btnSave;
-    this.btnScanFingerprint = btnScanFingerprint;
     this.etAmount = etAmount;
+    this.etInterestRate = etInterestRate;
     this.etName = etName;
     this.etNotes = etNotes;
-    this.tvFingerprintStatus = tvFingerprintStatus;
   }
 
   @Override
@@ -84,15 +79,15 @@ public final class ActivityAddDebtorBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.btnScanFingerprint;
-      Button btnScanFingerprint = ViewBindings.findChildViewById(rootView, id);
-      if (btnScanFingerprint == null) {
-        break missingId;
-      }
-
       id = R.id.etAmount;
       EditText etAmount = ViewBindings.findChildViewById(rootView, id);
       if (etAmount == null) {
+        break missingId;
+      }
+
+      id = R.id.etInterestRate;
+      EditText etInterestRate = ViewBindings.findChildViewById(rootView, id);
+      if (etInterestRate == null) {
         break missingId;
       }
 
@@ -108,14 +103,8 @@ public final class ActivityAddDebtorBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.tvFingerprintStatus;
-      TextView tvFingerprintStatus = ViewBindings.findChildViewById(rootView, id);
-      if (tvFingerprintStatus == null) {
-        break missingId;
-      }
-
-      return new ActivityAddDebtorBinding((ScrollView) rootView, btnSave, btnScanFingerprint,
-          etAmount, etName, etNotes, tvFingerprintStatus);
+      return new ActivityAddDebtorBinding((ScrollView) rootView, btnSave, etAmount, etInterestRate,
+          etName, etNotes);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

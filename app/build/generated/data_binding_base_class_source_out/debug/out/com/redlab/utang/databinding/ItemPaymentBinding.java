@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,10 +21,7 @@ public final class ItemPaymentBinding implements ViewBinding {
   private final CardView rootView;
 
   @NonNull
-  public final LinearLayout badgeBiometric;
-
-  @NonNull
-  public final LinearLayout badgePhoto;
+  public final CardView cardPayment;
 
   @NonNull
   public final ImageView ivReceiptPhoto;
@@ -39,13 +35,11 @@ public final class ItemPaymentBinding implements ViewBinding {
   @NonNull
   public final TextView tvReceiptType;
 
-  private ItemPaymentBinding(@NonNull CardView rootView, @NonNull LinearLayout badgeBiometric,
-      @NonNull LinearLayout badgePhoto, @NonNull ImageView ivReceiptPhoto,
-      @NonNull TextView tvPaymentAmount, @NonNull TextView tvPaymentDate,
-      @NonNull TextView tvReceiptType) {
+  private ItemPaymentBinding(@NonNull CardView rootView, @NonNull CardView cardPayment,
+      @NonNull ImageView ivReceiptPhoto, @NonNull TextView tvPaymentAmount,
+      @NonNull TextView tvPaymentDate, @NonNull TextView tvReceiptType) {
     this.rootView = rootView;
-    this.badgeBiometric = badgeBiometric;
-    this.badgePhoto = badgePhoto;
+    this.cardPayment = cardPayment;
     this.ivReceiptPhoto = ivReceiptPhoto;
     this.tvPaymentAmount = tvPaymentAmount;
     this.tvPaymentDate = tvPaymentDate;
@@ -79,17 +73,7 @@ public final class ItemPaymentBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
-      id = R.id.badgeBiometric;
-      LinearLayout badgeBiometric = ViewBindings.findChildViewById(rootView, id);
-      if (badgeBiometric == null) {
-        break missingId;
-      }
-
-      id = R.id.badgePhoto;
-      LinearLayout badgePhoto = ViewBindings.findChildViewById(rootView, id);
-      if (badgePhoto == null) {
-        break missingId;
-      }
+      CardView cardPayment = (CardView) rootView;
 
       id = R.id.ivReceiptPhoto;
       ImageView ivReceiptPhoto = ViewBindings.findChildViewById(rootView, id);
@@ -115,7 +99,7 @@ public final class ItemPaymentBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ItemPaymentBinding((CardView) rootView, badgeBiometric, badgePhoto, ivReceiptPhoto,
+      return new ItemPaymentBinding((CardView) rootView, cardPayment, ivReceiptPhoto,
           tvPaymentAmount, tvPaymentDate, tvReceiptType);
     }
     String missingId = rootView.getResources().getResourceName(id);

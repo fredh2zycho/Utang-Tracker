@@ -3,13 +3,13 @@ package com.redlab.utang;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -31,14 +31,14 @@ import com.redlab.utang.adapters.PaymentAdapter;
 import com.redlab.utang.database.AppDatabase;
 import com.redlab.utang.models.Debtor;
 import com.redlab.utang.models.PaymentRecord;
-import com.redlab.utang.utils.BiometricHelper;
 import com.redlab.utang.utils.DateUtils;
+import com.redlab.utang.utils.PdfExporter;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -53,15 +53,13 @@ public class DebtorDetailActivity extends AppCompatActivity {
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     private TextView tvName, tvTotal, tvPaid, tvRemaining, tvStartDate,
-                     tvFullyPaidDate, tvStatusBadge, tvFingerprintNote;
-    private Button btnPayBiometric, btnPayPhoto, btnEditNotes;
+                     tvFullyPaidDate, tvStatusBadge, tvInterestInfo, tvPenaltyInfo;
+    private Button btnPayPhoto, btnAddPenalty, btnExportPdf;
     private RecyclerView recyclerPayments;
 
-    // For photo capture
     private Uri photoUri;
     private String currentPhotoPath;
     private double pendingPaymentAmount = 0;
-
     private ActivityResultLauncher<Intent> cameraLauncher;
 
     @Override
@@ -72,42 +70,39 @@ public class DebtorDetailActivity extends AppCompatActivity {
         debtorId = getIntent().getLongExtra("debtor_id", -1);
         if (debtorId == -1) { finish(); return; }
 
-        if (getSupportActionBar() != null) {
+        if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
 
         initViews();
         setupCamera();
 
         AppDatabase db = AppDatabase.getInstance(this);
-
-        // Observe debtor
         db.debtorDao().getDebtorById(debtorId).observe(this, debtor -> {
             if (debtor == null) { finish(); return; }
             currentDebtor = debtor;
             bindDebtorInfo(debtor);
         });
+        db.paymentRecordDao().getPaymentsForDebtor(debtorId).observe(this, payments ->
+            paymentAdapter.setPayments(payments));
 
-        // Observe payments
-        db.paymentRecordDao().getPaymentsForDebtor(debtorId).observe(this, payments -> {
-            paymentAdapter.setPayments(payments);
-        });
-
-        btnPayBiometric.setOnClickListener(v -> showPaymentDialog("BIOMETRIC"));
-        btnPayPhoto.setOnClickListener(v -> showPaymentDialog("PHOTO"));
+        btnPayPhoto.setOnClickListener(v -> showPaymentDialog());
+        btnAddPenalty.setOnClickListener(v -> showPenaltyDialog());
+        btnExportPdf.setOnClickListener(v -> exportToPdf());
     }
 
     private void initViews() {
-        tvName           = findViewById(R.id.tvDetailName);
-        tvTotal          = findViewById(R.id.tvDetailTotal);
-        tvPaid           = findViewById(R.id.tvDetailPaid);
-        tvRemaining      = findViewById(R.id.tvDetailRemaining);
-        tvStartDate      = findViewById(R.id.tvDetailStartDate);
-        tvFullyPaidDate  = findViewById(R.id.tvDetailFullyPaidDate);
-        tvStatusBadge    = findViewById(R.id.tvStatusBadge);
-        tvFingerprintNote= findViewById(R.id.tvFingerprintNote);
-        btnPayBiometric  = findViewById(R.id.btnPayBiometric);
-        btnPayPhoto      = findViewById(R.id.btnPayPhoto);
+        tvName          = findViewById(R.id.tvDetailName);
+        tvTotal         = findViewById(R.id.tvDetailTotal);
+        tvPaid          = findViewById(R.id.tvDetailPaid);
+        tvRemaining     = findViewById(R.id.tvDetailRemaining);
+        tvStartDate     = findViewById(R.id.tvDetailStartDate);
+        tvFullyPaidDate = findViewById(R.id.tvDetailFullyPaidDate);
+        tvStatusBadge   = findViewById(R.id.tvStatusBadge);
+        tvInterestInfo  = findViewById(R.id.tvInterestInfo);
+        tvPenaltyInfo   = findViewById(R.id.tvPenaltyInfo);
+        btnPayPhoto     = findViewById(R.id.btnPayPhoto);
+        btnAddPenalty   = findViewById(R.id.btnAddPenalty);
+        btnExportPdf    = findViewById(R.id.btnExportPdf);
         recyclerPayments = findViewById(R.id.recyclerPayments);
 
         paymentAdapter = new PaymentAdapter(this);
@@ -120,215 +115,213 @@ public class DebtorDetailActivity extends AppCompatActivity {
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == RESULT_OK) {
-                    // Photo taken successfully — save payment
                     processPhotoPayment();
                 } else {
                     Toast.makeText(this, "Kinansela ang pagkuha ng larawan.", Toast.LENGTH_SHORT).show();
                     pendingPaymentAmount = 0;
                     currentPhotoPath = null;
                 }
-            }
-        );
+            });
     }
 
-    private void bindDebtorInfo(Debtor debtor) {
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(debtor.getName());
-        }
-        tvName.setText(debtor.getName());
-        tvTotal.setText(String.format("Kabuuang Utang: ₱%.2f", debtor.getTotalAmount()));
-        tvPaid.setText(String.format("Nabayad na: ₱%.2f", debtor.getAmountPaid()));
-        tvRemaining.setText(String.format("Natitira: ₱%.2f", debtor.getRemainingBalance()));
-        tvStartDate.setText("📅 Simula ng Utang: " + DateUtils.formatForDisplay(debtor.getStartDate()));
+    private void bindDebtorInfo(Debtor d) {
+        if (getSupportActionBar() != null) getSupportActionBar().setTitle(d.getName());
 
-        // Fingerprint note
-        if (debtor.getFingerprintKey() != null && !debtor.getFingerprintKey().isEmpty()) {
-            tvFingerprintNote.setText("🔏 May naka-register na fingerprint");
-            tvFingerprintNote.setVisibility(View.VISIBLE);
+        tvName.setText(d.getName());
+        tvTotal.setText(String.format("Kabuuang Utang: ₱%.2f", d.getTotalAmount()));
+        tvPaid.setText(String.format("Nabayad na: ₱%.2f", d.getAmountPaid()));
+        tvRemaining.setText(String.format("Natitira: ₱%.2f", d.getRemainingBalance()));
+        tvStartDate.setText("📅 Simula: " + DateUtils.formatForDisplay(d.getStartDate()));
+
+        if (d.getInterestRate() > 0) {
+            tvInterestInfo.setVisibility(View.VISIBLE);
+            tvInterestInfo.setText(String.format("📈 Interest: %.1f%% bawat buwan", d.getInterestRate()));
         } else {
-            tvFingerprintNote.setText("⚠️ Walang fingerprint — photo receipt lang");
-            tvFingerprintNote.setVisibility(View.VISIBLE);
+            tvInterestInfo.setVisibility(View.GONE);
         }
 
-        if (debtor.isFullyPaid()) {
+        if (d.getPenaltyAmount() > 0) {
+            tvPenaltyInfo.setVisibility(View.VISIBLE);
+            tvPenaltyInfo.setText(String.format("⚠️ Penalty: ₱%.2f", d.getPenaltyAmount()));
+        } else {
+            tvPenaltyInfo.setVisibility(View.GONE);
+        }
+
+        if (d.isFullyPaid()) {
             tvStatusBadge.setText("✅ FULLY PAID");
             tvStatusBadge.setBackgroundTintList(
                 android.content.res.ColorStateList.valueOf(getColor(R.color.green_700)));
-            tvFullyPaidDate.setText("🏆 Fully Paid noong: " + DateUtils.formatForDisplay(debtor.getFullyPaidDate()));
+            tvFullyPaidDate.setText("🏆 Fully Paid noong: " + DateUtils.formatForDisplay(d.getFullyPaidDate()));
             tvFullyPaidDate.setVisibility(View.VISIBLE);
-            btnPayBiometric.setEnabled(false);
-            btnPayPhoto.setEnabled(false);
-            btnPayBiometric.setAlpha(0.4f);
-            btnPayPhoto.setAlpha(0.4f);
+            btnPayPhoto.setEnabled(false); btnPayPhoto.setAlpha(0.4f);
+            btnAddPenalty.setEnabled(false); btnAddPenalty.setAlpha(0.4f);
         } else {
             tvStatusBadge.setText("⚠️ MAY UTANG PA");
             tvStatusBadge.setBackgroundTintList(
                 android.content.res.ColorStateList.valueOf(getColor(R.color.red_700)));
             tvFullyPaidDate.setVisibility(View.GONE);
-            btnPayBiometric.setEnabled(true);
-            btnPayPhoto.setEnabled(true);
-            btnPayBiometric.setAlpha(1f);
-            btnPayPhoto.setAlpha(1f);
+            btnPayPhoto.setEnabled(true); btnPayPhoto.setAlpha(1f);
+            btnAddPenalty.setEnabled(true); btnAddPenalty.setAlpha(1f);
         }
     }
 
-    private void showPaymentDialog(String receiptType) {
-        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_payment, null);
-        EditText etPaymentAmount = dialogView.findViewById(R.id.etPaymentAmount);
+    // ── Payment Dialog ────────────────────────────────────────────────────
 
-        String title = "BIOMETRIC".equals(receiptType)
-                ? "💳 Magbayad (Biometric Receipt)"
-                : "📷 Magbayad (Photo Receipt)";
+    private void showPaymentDialog() {
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_payment, null);
+        EditText etAmount = dialogView.findViewById(R.id.etPaymentAmount);
 
         new AlertDialog.Builder(this)
-            .setTitle(title)
+            .setTitle("📷 Magbayad (may Photo Receipt)")
             .setView(dialogView)
-            .setPositiveButton("Ituloy", (dialog, which) -> {
-                String amountStr = etPaymentAmount.getText().toString().trim();
-                if (TextUtils.isEmpty(amountStr)) {
-                    Toast.makeText(this, "Ilagay ang halaga ng bayad.", Toast.LENGTH_SHORT).show();
+            .setPositiveButton("Kumuha ng Larawan", (dialog, which) -> {
+                String s = etAmount.getText().toString().trim();
+                if (TextUtils.isEmpty(s)) {
+                    Toast.makeText(this, "Ilagay ang halaga.", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 double amount;
                 try {
-                    amount = Double.parseDouble(amountStr);
+                    amount = Double.parseDouble(s);
                     if (amount <= 0) throw new NumberFormatException();
                 } catch (NumberFormatException e) {
                     Toast.makeText(this, "Hindi valid ang halaga.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 if (amount > currentDebtor.getRemainingBalance()) {
-                    Toast.makeText(this,
-                        String.format("Sobra ang bayad! Natitira lang ₱%.2f",
-                            currentDebtor.getRemainingBalance()),
-                        Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, String.format("Sobra! Natitira lang ₱%.2f",
+                        currentDebtor.getRemainingBalance()), Toast.LENGTH_LONG).show();
                     return;
                 }
-
                 pendingPaymentAmount = amount;
-                if ("BIOMETRIC".equals(receiptType)) {
-                    processBiometricPayment(amount);
-                } else {
-                    launchCamera(amount);
-                }
+                launchCamera();
             })
             .setNegativeButton("Kanselahin", null)
             .show();
     }
 
-    private void processBiometricPayment(double amount) {
-        if (!BiometricHelper.isBiometricAvailable(this)) {
-            Toast.makeText(this,
-                "Hindi available ang biometric. Gamitin ang Photo Receipt.",
-                Toast.LENGTH_LONG).show();
-            return;
+    // ── Penalty Dialog ────────────────────────────────────────────────────
+
+    private void showPenaltyDialog() {
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_penalty, null);
+        EditText etPenalty = dialogView.findViewById(R.id.etPenaltyAmount);
+        EditText etReason  = dialogView.findViewById(R.id.etPenaltyReason);
+
+        // Pre-fill computed interest if rate is set
+        if (currentDebtor.getInterestRate() > 0) {
+            double computed = currentDebtor.getRemainingBalance() * (currentDebtor.getInterestRate() / 100.0);
+            etPenalty.setText(String.format(Locale.getDefault(), "%.2f", computed));
+            etReason.setText(String.format(Locale.getDefault(),
+                "Interest %.1f%% sa ₱%.2f", currentDebtor.getInterestRate(), currentDebtor.getRemainingBalance()));
         }
 
-        BiometricHelper.showBiometricPrompt(
-            this,
-            "I-verify ang Pagbabayad",
-            currentDebtor.getName(),
-            String.format("I-scan ang fingerprint para i-confirm ang ₱%.2f na bayad.", amount),
-            new BiometricHelper.BiometricCallback() {
-                @Override
-                public void onSuccess() {
-                    savePayment(amount, "BIOMETRIC", null, true);
+        new AlertDialog.Builder(this)
+            .setTitle("⚠️ Magdagdag ng Penalty / Interest")
+            .setView(dialogView)
+            .setPositiveButton("I-apply", (dialog, which) -> {
+                String s = etPenalty.getText().toString().trim();
+                if (TextUtils.isEmpty(s)) return;
+                double penalty;
+                try {
+                    penalty = Double.parseDouble(s);
+                    if (penalty <= 0) throw new NumberFormatException();
+                } catch (NumberFormatException e) {
+                    Toast.makeText(this, "Hindi valid.", Toast.LENGTH_SHORT).show();
+                    return;
                 }
-
-                @Override
-                public void onFailure(String errorMessage) {
-                    Toast.makeText(DebtorDetailActivity.this,
-                        "Hindi naverify: " + errorMessage, Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onError(String errorMessage) {
-                    Toast.makeText(DebtorDetailActivity.this,
-                        errorMessage, Toast.LENGTH_SHORT).show();
-                }
-            }
-        );
+                String reason = etReason.getText().toString().trim();
+                applyPenalty(penalty, reason.isEmpty() ? "Penalty" : reason);
+            })
+            .setNegativeButton("Kanselahin", null)
+            .show();
     }
 
-    private void launchCamera(double amount) {
+    private void applyPenalty(double penalty, String reason) {
+        String date = DateUtils.getCurrentDateTimeISO();
+        PaymentRecord record = new PaymentRecord(debtorId, penalty, date, null, "PENALTY");
+        AppDatabase db = AppDatabase.getInstance(this);
+        executor.execute(() -> {
+            db.paymentRecordDao().insert(record);
+            db.debtorDao().addPenalty(debtorId, penalty);
+            runOnUiThread(() ->
+                Toast.makeText(this, String.format("⚠️ ₱%.2f penalty na-apply. (%s)", penalty, reason),
+                    Toast.LENGTH_SHORT).show());
+        });
+    }
+
+    // ── Camera ────────────────────────────────────────────────────────────
+
+    private void launchCamera() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
             return;
         }
-
-        pendingPaymentAmount = amount;
         try {
             File photoFile = createImageFile();
             photoUri = FileProvider.getUriForFile(this,
                 getApplicationContext().getPackageName() + ".fileprovider", photoFile);
-
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-            cameraLauncher.launch(takePictureIntent);
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+            cameraLauncher.launch(intent);
         } catch (IOException e) {
-            Toast.makeText(this, "Hindi ma-open ang camera: " + e.getMessage(),
-                Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Hindi ma-open ang camera.", Toast.LENGTH_SHORT).show();
         }
     }
 
     private File createImageFile() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-        String imageFileName = "RECEIPT_" + debtorId + "_" + timeStamp;
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
-        currentPhotoPath = image.getAbsolutePath();
-        return image;
+        String ts = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        File dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File f = File.createTempFile("RECEIPT_" + debtorId + "_" + ts, ".jpg", dir);
+        currentPhotoPath = f.getAbsolutePath();
+        return f;
     }
 
     private void processPhotoPayment() {
-        if (currentPhotoPath != null && pendingPaymentAmount > 0) {
-            savePayment(pendingPaymentAmount, "PHOTO", currentPhotoPath, false);
-        }
-    }
-
-    private void savePayment(double amount, String receiptType, String photoPath, boolean biometricVerified) {
-        String paymentDate = DateUtils.getCurrentDateTimeISO();
-        PaymentRecord record = new PaymentRecord(debtorId, amount, paymentDate,
-                receiptType, photoPath, biometricVerified);
-
+        if (currentPhotoPath == null || pendingPaymentAmount <= 0) return;
+        String date = DateUtils.getCurrentDateTimeISO();
+        PaymentRecord record = new PaymentRecord(debtorId, pendingPaymentAmount,
+            date, currentPhotoPath, "PAYMENT");
         AppDatabase db = AppDatabase.getInstance(this);
         executor.execute(() -> {
             db.paymentRecordDao().insert(record);
-            db.debtorDao().addPayment(debtorId, amount, paymentDate);
-
+            db.debtorDao().addPayment(debtorId, pendingPaymentAmount, date);
             runOnUiThread(() -> {
+                Toast.makeText(this, String.format("📷 ₱%.2f nai-record may photo receipt!",
+                    pendingPaymentAmount), Toast.LENGTH_SHORT).show();
                 pendingPaymentAmount = 0;
                 currentPhotoPath = null;
-                String msg = "BIOMETRIC".equals(receiptType)
-                    ? String.format("✅ ₱%.2f na-verify ng biometric!", amount)
-                    : String.format("📷 ₱%.2f nai-record may photo receipt!", amount);
-                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
             });
+        });
+    }
+
+    // ── Export PDF ────────────────────────────────────────────────────────
+
+    private void exportToPdf() {
+        if (currentDebtor == null) return;
+        executor.execute(() -> {
+            AppDatabase db = AppDatabase.getInstance(this);
+            List<PaymentRecord> payments = db.paymentRecordDao()
+                .getPaymentsForDebtorSync(debtorId);
+            runOnUiThread(() ->
+                PdfExporter.exportSingleDebtor(this, currentDebtor, payments));
         });
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_CAMERA_PERMISSION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                launchCamera(pendingPaymentAmount);
-            } else {
-                Toast.makeText(this,
-                    "Kailangan ng camera permission para sa photo receipt.", Toast.LENGTH_SHORT).show();
-            }
+        if (requestCode == REQUEST_CAMERA_PERMISSION
+                && grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            launchCamera();
         }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
-        }
+        if (item.getItemId() == android.R.id.home) { finish(); return true; }
         return super.onOptionsItemSelected(item);
     }
 

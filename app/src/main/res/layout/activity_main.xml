@@ -11,7 +11,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Header -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -24,9 +23,10 @@
             android:elevation="4dp">
 
             <TextView
+                android:id="@+id/tvStoreName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="💰 UTANG TRACKER"
+                android:text="Utang Tracker"
                 android:textColor="@android:color/white"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -46,7 +46,17 @@
                 android:textSize="14sp" />
         </LinearLayout>
 
-        <!-- Empty state -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="💡 Pindutin nang matagal ang pangalan para mag-delete"
+            android:textSize="11sp"
+            android:textColor="@color/text_secondary"
+            android:gravity="center"
+            android:paddingTop="6dp"
+            android:paddingBottom="4dp"
+            android:background="#F0F0F0" />
+
         <TextView
             android:id="@+id/tvEmpty"
             android:layout_width="match_parent"

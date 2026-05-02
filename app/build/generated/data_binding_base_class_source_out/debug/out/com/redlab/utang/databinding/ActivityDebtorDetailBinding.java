@@ -22,7 +22,10 @@ public final class ActivityDebtorDetailBinding implements ViewBinding {
   private final LinearLayout rootView;
 
   @NonNull
-  public final Button btnPayBiometric;
+  public final Button btnAddPenalty;
+
+  @NonNull
+  public final Button btnExportPdf;
 
   @NonNull
   public final Button btnPayPhoto;
@@ -49,20 +52,24 @@ public final class ActivityDebtorDetailBinding implements ViewBinding {
   public final TextView tvDetailTotal;
 
   @NonNull
-  public final TextView tvFingerprintNote;
+  public final TextView tvInterestInfo;
+
+  @NonNull
+  public final TextView tvPenaltyInfo;
 
   @NonNull
   public final TextView tvStatusBadge;
 
-  private ActivityDebtorDetailBinding(@NonNull LinearLayout rootView,
-      @NonNull Button btnPayBiometric, @NonNull Button btnPayPhoto,
+  private ActivityDebtorDetailBinding(@NonNull LinearLayout rootView, @NonNull Button btnAddPenalty,
+      @NonNull Button btnExportPdf, @NonNull Button btnPayPhoto,
       @NonNull RecyclerView recyclerPayments, @NonNull TextView tvDetailFullyPaidDate,
       @NonNull TextView tvDetailName, @NonNull TextView tvDetailPaid,
       @NonNull TextView tvDetailRemaining, @NonNull TextView tvDetailStartDate,
-      @NonNull TextView tvDetailTotal, @NonNull TextView tvFingerprintNote,
-      @NonNull TextView tvStatusBadge) {
+      @NonNull TextView tvDetailTotal, @NonNull TextView tvInterestInfo,
+      @NonNull TextView tvPenaltyInfo, @NonNull TextView tvStatusBadge) {
     this.rootView = rootView;
-    this.btnPayBiometric = btnPayBiometric;
+    this.btnAddPenalty = btnAddPenalty;
+    this.btnExportPdf = btnExportPdf;
     this.btnPayPhoto = btnPayPhoto;
     this.recyclerPayments = recyclerPayments;
     this.tvDetailFullyPaidDate = tvDetailFullyPaidDate;
@@ -71,7 +78,8 @@ public final class ActivityDebtorDetailBinding implements ViewBinding {
     this.tvDetailRemaining = tvDetailRemaining;
     this.tvDetailStartDate = tvDetailStartDate;
     this.tvDetailTotal = tvDetailTotal;
-    this.tvFingerprintNote = tvFingerprintNote;
+    this.tvInterestInfo = tvInterestInfo;
+    this.tvPenaltyInfo = tvPenaltyInfo;
     this.tvStatusBadge = tvStatusBadge;
   }
 
@@ -102,9 +110,15 @@ public final class ActivityDebtorDetailBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
-      id = R.id.btnPayBiometric;
-      Button btnPayBiometric = ViewBindings.findChildViewById(rootView, id);
-      if (btnPayBiometric == null) {
+      id = R.id.btnAddPenalty;
+      Button btnAddPenalty = ViewBindings.findChildViewById(rootView, id);
+      if (btnAddPenalty == null) {
+        break missingId;
+      }
+
+      id = R.id.btnExportPdf;
+      Button btnExportPdf = ViewBindings.findChildViewById(rootView, id);
+      if (btnExportPdf == null) {
         break missingId;
       }
 
@@ -156,9 +170,15 @@ public final class ActivityDebtorDetailBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.tvFingerprintNote;
-      TextView tvFingerprintNote = ViewBindings.findChildViewById(rootView, id);
-      if (tvFingerprintNote == null) {
+      id = R.id.tvInterestInfo;
+      TextView tvInterestInfo = ViewBindings.findChildViewById(rootView, id);
+      if (tvInterestInfo == null) {
+        break missingId;
+      }
+
+      id = R.id.tvPenaltyInfo;
+      TextView tvPenaltyInfo = ViewBindings.findChildViewById(rootView, id);
+      if (tvPenaltyInfo == null) {
         break missingId;
       }
 
@@ -168,9 +188,10 @@ public final class ActivityDebtorDetailBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ActivityDebtorDetailBinding((LinearLayout) rootView, btnPayBiometric, btnPayPhoto,
-          recyclerPayments, tvDetailFullyPaidDate, tvDetailName, tvDetailPaid, tvDetailRemaining,
-          tvDetailStartDate, tvDetailTotal, tvFingerprintNote, tvStatusBadge);
+      return new ActivityDebtorDetailBinding((LinearLayout) rootView, btnAddPenalty, btnExportPdf,
+          btnPayPhoto, recyclerPayments, tvDetailFullyPaidDate, tvDetailName, tvDetailPaid,
+          tvDetailRemaining, tvDetailStartDate, tvDetailTotal, tvInterestInfo, tvPenaltyInfo,
+          tvStatusBadge);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

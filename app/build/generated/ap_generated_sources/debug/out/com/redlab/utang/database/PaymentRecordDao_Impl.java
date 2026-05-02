@@ -36,7 +36,7 @@ public final class PaymentRecordDao_Impl implements PaymentRecordDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "INSERT OR ABORT INTO `payment_records` (`id`,`debtorId`,`amount`,`paymentDate`,`receiptType`,`photoPath`,`biometricVerified`) VALUES (nullif(?, 0),?,?,?,?,?,?)";
+        return "INSERT OR ABORT INTO `payment_records` (`id`,`debtorId`,`amount`,`paymentDate`,`photoPath`,`recordType`) VALUES (nullif(?, 0),?,?,?,?,?)";
       }
 
       @Override
@@ -50,18 +50,16 @@ public final class PaymentRecordDao_Impl implements PaymentRecordDao {
         } else {
           statement.bindString(4, entity.getPaymentDate());
         }
-        if (entity.getReceiptType() == null) {
+        if (entity.getPhotoPath() == null) {
           statement.bindNull(5);
         } else {
-          statement.bindString(5, entity.getReceiptType());
+          statement.bindString(5, entity.getPhotoPath());
         }
-        if (entity.getPhotoPath() == null) {
+        if (entity.getRecordType() == null) {
           statement.bindNull(6);
         } else {
-          statement.bindString(6, entity.getPhotoPath());
+          statement.bindString(6, entity.getRecordType());
         }
-        final int _tmp = entity.isBiometricVerified() ? 1 : 0;
-        statement.bindLong(7, _tmp);
       }
     };
     this.__deletionAdapterOfPaymentRecord = new EntityDeletionOrUpdateAdapter<PaymentRecord>(__db) {
@@ -120,9 +118,8 @@ public final class PaymentRecordDao_Impl implements PaymentRecordDao {
           final int _cursorIndexOfDebtorId = CursorUtil.getColumnIndexOrThrow(_cursor, "debtorId");
           final int _cursorIndexOfAmount = CursorUtil.getColumnIndexOrThrow(_cursor, "amount");
           final int _cursorIndexOfPaymentDate = CursorUtil.getColumnIndexOrThrow(_cursor, "paymentDate");
-          final int _cursorIndexOfReceiptType = CursorUtil.getColumnIndexOrThrow(_cursor, "receiptType");
           final int _cursorIndexOfPhotoPath = CursorUtil.getColumnIndexOrThrow(_cursor, "photoPath");
-          final int _cursorIndexOfBiometricVerified = CursorUtil.getColumnIndexOrThrow(_cursor, "biometricVerified");
+          final int _cursorIndexOfRecordType = CursorUtil.getColumnIndexOrThrow(_cursor, "recordType");
           final List<PaymentRecord> _result = new ArrayList<PaymentRecord>(_cursor.getCount());
           while (_cursor.moveToNext()) {
             final PaymentRecord _item;
@@ -143,13 +140,6 @@ public final class PaymentRecordDao_Impl implements PaymentRecordDao {
               _tmpPaymentDate = _cursor.getString(_cursorIndexOfPaymentDate);
             }
             _item.setPaymentDate(_tmpPaymentDate);
-            final String _tmpReceiptType;
-            if (_cursor.isNull(_cursorIndexOfReceiptType)) {
-              _tmpReceiptType = null;
-            } else {
-              _tmpReceiptType = _cursor.getString(_cursorIndexOfReceiptType);
-            }
-            _item.setReceiptType(_tmpReceiptType);
             final String _tmpPhotoPath;
             if (_cursor.isNull(_cursorIndexOfPhotoPath)) {
               _tmpPhotoPath = null;
@@ -157,11 +147,13 @@ public final class PaymentRecordDao_Impl implements PaymentRecordDao {
               _tmpPhotoPath = _cursor.getString(_cursorIndexOfPhotoPath);
             }
             _item.setPhotoPath(_tmpPhotoPath);
-            final boolean _tmpBiometricVerified;
-            final int _tmp;
-            _tmp = _cursor.getInt(_cursorIndexOfBiometricVerified);
-            _tmpBiometricVerified = _tmp != 0;
-            _item.setBiometricVerified(_tmpBiometricVerified);
+            final String _tmpRecordType;
+            if (_cursor.isNull(_cursorIndexOfRecordType)) {
+              _tmpRecordType = null;
+            } else {
+              _tmpRecordType = _cursor.getString(_cursorIndexOfRecordType);
+            }
+            _item.setRecordType(_tmpRecordType);
             _result.add(_item);
           }
           return _result;
@@ -179,7 +171,7 @@ public final class PaymentRecordDao_Impl implements PaymentRecordDao {
 
   @Override
   public List<PaymentRecord> getPaymentsForDebtorSync(final long debtorId) {
-    final String _sql = "SELECT * FROM payment_records WHERE debtorId = ? ORDER BY paymentDate DESC";
+    final String _sql = "SELECT * FROM payment_records WHERE debtorId = ? ORDER BY paymentDate ASC";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
     _statement.bindLong(_argIndex, debtorId);
@@ -190,9 +182,8 @@ public final class PaymentRecordDao_Impl implements PaymentRecordDao {
       final int _cursorIndexOfDebtorId = CursorUtil.getColumnIndexOrThrow(_cursor, "debtorId");
       final int _cursorIndexOfAmount = CursorUtil.getColumnIndexOrThrow(_cursor, "amount");
       final int _cursorIndexOfPaymentDate = CursorUtil.getColumnIndexOrThrow(_cursor, "paymentDate");
-      final int _cursorIndexOfReceiptType = CursorUtil.getColumnIndexOrThrow(_cursor, "receiptType");
       final int _cursorIndexOfPhotoPath = CursorUtil.getColumnIndexOrThrow(_cursor, "photoPath");
-      final int _cursorIndexOfBiometricVerified = CursorUtil.getColumnIndexOrThrow(_cursor, "biometricVerified");
+      final int _cursorIndexOfRecordType = CursorUtil.getColumnIndexOrThrow(_cursor, "recordType");
       final List<PaymentRecord> _result = new ArrayList<PaymentRecord>(_cursor.getCount());
       while (_cursor.moveToNext()) {
         final PaymentRecord _item;
@@ -213,13 +204,6 @@ public final class PaymentRecordDao_Impl implements PaymentRecordDao {
           _tmpPaymentDate = _cursor.getString(_cursorIndexOfPaymentDate);
         }
         _item.setPaymentDate(_tmpPaymentDate);
-        final String _tmpReceiptType;
-        if (_cursor.isNull(_cursorIndexOfReceiptType)) {
-          _tmpReceiptType = null;
-        } else {
-          _tmpReceiptType = _cursor.getString(_cursorIndexOfReceiptType);
-        }
-        _item.setReceiptType(_tmpReceiptType);
         final String _tmpPhotoPath;
         if (_cursor.isNull(_cursorIndexOfPhotoPath)) {
           _tmpPhotoPath = null;
@@ -227,11 +211,69 @@ public final class PaymentRecordDao_Impl implements PaymentRecordDao {
           _tmpPhotoPath = _cursor.getString(_cursorIndexOfPhotoPath);
         }
         _item.setPhotoPath(_tmpPhotoPath);
-        final boolean _tmpBiometricVerified;
-        final int _tmp;
-        _tmp = _cursor.getInt(_cursorIndexOfBiometricVerified);
-        _tmpBiometricVerified = _tmp != 0;
-        _item.setBiometricVerified(_tmpBiometricVerified);
+        final String _tmpRecordType;
+        if (_cursor.isNull(_cursorIndexOfRecordType)) {
+          _tmpRecordType = null;
+        } else {
+          _tmpRecordType = _cursor.getString(_cursorIndexOfRecordType);
+        }
+        _item.setRecordType(_tmpRecordType);
+        _result.add(_item);
+      }
+      return _result;
+    } finally {
+      _cursor.close();
+      _statement.release();
+    }
+  }
+
+  @Override
+  public List<PaymentRecord> getAllPaymentsSync() {
+    final String _sql = "SELECT * FROM payment_records ORDER BY paymentDate DESC";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
+    __db.assertNotSuspendingTransaction();
+    final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+    try {
+      final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+      final int _cursorIndexOfDebtorId = CursorUtil.getColumnIndexOrThrow(_cursor, "debtorId");
+      final int _cursorIndexOfAmount = CursorUtil.getColumnIndexOrThrow(_cursor, "amount");
+      final int _cursorIndexOfPaymentDate = CursorUtil.getColumnIndexOrThrow(_cursor, "paymentDate");
+      final int _cursorIndexOfPhotoPath = CursorUtil.getColumnIndexOrThrow(_cursor, "photoPath");
+      final int _cursorIndexOfRecordType = CursorUtil.getColumnIndexOrThrow(_cursor, "recordType");
+      final List<PaymentRecord> _result = new ArrayList<PaymentRecord>(_cursor.getCount());
+      while (_cursor.moveToNext()) {
+        final PaymentRecord _item;
+        _item = new PaymentRecord();
+        final long _tmpId;
+        _tmpId = _cursor.getLong(_cursorIndexOfId);
+        _item.setId(_tmpId);
+        final long _tmpDebtorId;
+        _tmpDebtorId = _cursor.getLong(_cursorIndexOfDebtorId);
+        _item.setDebtorId(_tmpDebtorId);
+        final double _tmpAmount;
+        _tmpAmount = _cursor.getDouble(_cursorIndexOfAmount);
+        _item.setAmount(_tmpAmount);
+        final String _tmpPaymentDate;
+        if (_cursor.isNull(_cursorIndexOfPaymentDate)) {
+          _tmpPaymentDate = null;
+        } else {
+          _tmpPaymentDate = _cursor.getString(_cursorIndexOfPaymentDate);
+        }
+        _item.setPaymentDate(_tmpPaymentDate);
+        final String _tmpPhotoPath;
+        if (_cursor.isNull(_cursorIndexOfPhotoPath)) {
+          _tmpPhotoPath = null;
+        } else {
+          _tmpPhotoPath = _cursor.getString(_cursorIndexOfPhotoPath);
+        }
+        _item.setPhotoPath(_tmpPhotoPath);
+        final String _tmpRecordType;
+        if (_cursor.isNull(_cursorIndexOfRecordType)) {
+          _tmpRecordType = null;
+        } else {
+          _tmpRecordType = _cursor.getString(_cursorIndexOfRecordType);
+        }
+        _item.setRecordType(_tmpRecordType);
         _result.add(_item);
       }
       return _result;

@@ -1,24 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.redlab.utang"
-    android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionCode="3"
+    android:versionName="3.0.0" >
 
     <uses-sdk
         android:minSdkVersion="26"
         android:targetSdkVersion="34" />
 
-    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
-    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
-    <uses-feature
-        android:name="android.hardware.fingerprint"
-        android:required="false" />
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -38,12 +35,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="false" >
+        android:theme="@style/AppTheme" >
         <activity
-            android:name="com.redlab.utang.MainActivity"
+            android:name="com.redlab.utang.SplashActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustResize" >
+            android:noHistory="true"
+            android:theme="@style/SplashTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -51,12 +48,24 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="com.redlab.utang.AdActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.redlab.utang.MainActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name="com.redlab.utang.AddDebtorActivity"
             android:exported="false"
             android:parentActivityName="com.redlab.utang.MainActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.redlab.utang.DebtorDetailActivity"
+            android:exported="false"
+            android:parentActivityName="com.redlab.utang.MainActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.redlab.utang.SettingsActivity"
             android:exported="false"
             android:parentActivityName="com.redlab.utang.MainActivity"
             android:windowSoftInputMode="adjustResize" />

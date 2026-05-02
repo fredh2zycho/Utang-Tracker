@@ -35,13 +35,15 @@ public final class DebtorDao_Impl implements DebtorDao {
 
   private final SharedSQLiteStatement __preparedStmtOfAddPayment;
 
+  private final SharedSQLiteStatement __preparedStmtOfAddPenalty;
+
   public DebtorDao_Impl(@NonNull final RoomDatabase __db) {
     this.__db = __db;
     this.__insertionAdapterOfDebtor = new EntityInsertionAdapter<Debtor>(__db) {
       @Override
       @NonNull
       protected String createQuery() {
-        return "INSERT OR ABORT INTO `debtors` (`id`,`name`,`totalAmount`,`amountPaid`,`startDate`,`fullyPaidDate`,`fingerprintKey`,`notes`,`isFullyPaid`) VALUES (nullif(?, 0),?,?,?,?,?,?,?,?)";
+        return "INSERT OR ABORT INTO `debtors` (`id`,`name`,`totalAmount`,`amountPaid`,`interestRate`,`penaltyAmount`,`startDate`,`fullyPaidDate`,`notes`,`isFullyPaid`) VALUES (nullif(?, 0),?,?,?,?,?,?,?,?,?)";
       }
 
       @Override
@@ -54,28 +56,25 @@ public final class DebtorDao_Impl implements DebtorDao {
         }
         statement.bindDouble(3, entity.getTotalAmount());
         statement.bindDouble(4, entity.getAmountPaid());
+        statement.bindDouble(5, entity.getInterestRate());
+        statement.bindDouble(6, entity.getPenaltyAmount());
         if (entity.getStartDate() == null) {
-          statement.bindNull(5);
-        } else {
-          statement.bindString(5, entity.getStartDate());
-        }
-        if (entity.getFullyPaidDate() == null) {
-          statement.bindNull(6);
-        } else {
-          statement.bindString(6, entity.getFullyPaidDate());
-        }
-        if (entity.getFingerprintKey() == null) {
           statement.bindNull(7);
         } else {
-          statement.bindString(7, entity.getFingerprintKey());
+          statement.bindString(7, entity.getStartDate());
         }
-        if (entity.getNotes() == null) {
+        if (entity.getFullyPaidDate() == null) {
           statement.bindNull(8);
         } else {
-          statement.bindString(8, entity.getNotes());
+          statement.bindString(8, entity.getFullyPaidDate());
+        }
+        if (entity.getNotes() == null) {
+          statement.bindNull(9);
+        } else {
+          statement.bindString(9, entity.getNotes());
         }
         final int _tmp = entity.isFullyPaid() ? 1 : 0;
-        statement.bindLong(9, _tmp);
+        statement.bindLong(10, _tmp);
       }
     };
     this.__deletionAdapterOfDebtor = new EntityDeletionOrUpdateAdapter<Debtor>(__db) {
@@ -94,7 +93,7 @@ public final class DebtorDao_Impl implements DebtorDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "UPDATE OR ABORT `debtors` SET `id` = ?,`name` = ?,`totalAmount` = ?,`amountPaid` = ?,`startDate` = ?,`fullyPaidDate` = ?,`fingerprintKey` = ?,`notes` = ?,`isFullyPaid` = ? WHERE `id` = ?";
+        return "UPDATE OR ABORT `debtors` SET `id` = ?,`name` = ?,`totalAmount` = ?,`amountPaid` = ?,`interestRate` = ?,`penaltyAmount` = ?,`startDate` = ?,`fullyPaidDate` = ?,`notes` = ?,`isFullyPaid` = ? WHERE `id` = ?";
       }
 
       @Override
@@ -107,36 +106,41 @@ public final class DebtorDao_Impl implements DebtorDao {
         }
         statement.bindDouble(3, entity.getTotalAmount());
         statement.bindDouble(4, entity.getAmountPaid());
+        statement.bindDouble(5, entity.getInterestRate());
+        statement.bindDouble(6, entity.getPenaltyAmount());
         if (entity.getStartDate() == null) {
-          statement.bindNull(5);
-        } else {
-          statement.bindString(5, entity.getStartDate());
-        }
-        if (entity.getFullyPaidDate() == null) {
-          statement.bindNull(6);
-        } else {
-          statement.bindString(6, entity.getFullyPaidDate());
-        }
-        if (entity.getFingerprintKey() == null) {
           statement.bindNull(7);
         } else {
-          statement.bindString(7, entity.getFingerprintKey());
+          statement.bindString(7, entity.getStartDate());
         }
-        if (entity.getNotes() == null) {
+        if (entity.getFullyPaidDate() == null) {
           statement.bindNull(8);
         } else {
-          statement.bindString(8, entity.getNotes());
+          statement.bindString(8, entity.getFullyPaidDate());
+        }
+        if (entity.getNotes() == null) {
+          statement.bindNull(9);
+        } else {
+          statement.bindString(9, entity.getNotes());
         }
         final int _tmp = entity.isFullyPaid() ? 1 : 0;
-        statement.bindLong(9, _tmp);
-        statement.bindLong(10, entity.getId());
+        statement.bindLong(10, _tmp);
+        statement.bindLong(11, entity.getId());
       }
     };
     this.__preparedStmtOfAddPayment = new SharedSQLiteStatement(__db) {
       @Override
       @NonNull
       public String createQuery() {
-        final String _query = "UPDATE debtors SET amountPaid = amountPaid + ?, isFullyPaid = CASE WHEN (amountPaid + ?) >= totalAmount THEN 1 ELSE 0 END, fullyPaidDate = CASE WHEN (amountPaid + ?) >= totalAmount THEN ? ELSE fullyPaidDate END WHERE id = ?";
+        final String _query = "UPDATE debtors SET amountPaid = amountPaid + ?, isFullyPaid = CASE WHEN (amountPaid + ?) >= (totalAmount + penaltyAmount) THEN 1 ELSE 0 END, fullyPaidDate = CASE WHEN (amountPaid + ?) >= (totalAmount + penaltyAmount) THEN ? ELSE fullyPaidDate END WHERE id = ?";
+        return _query;
+      }
+    };
+    this.__preparedStmtOfAddPenalty = new SharedSQLiteStatement(__db) {
+      @Override
+      @NonNull
+      public String createQuery() {
+        final String _query = "UPDATE debtors SET penaltyAmount = penaltyAmount + ? WHERE id = ?";
         return _query;
       }
     };
@@ -211,6 +215,27 @@ public final class DebtorDao_Impl implements DebtorDao {
   }
 
   @Override
+  public void addPenalty(final long id, final double penalty) {
+    __db.assertNotSuspendingTransaction();
+    final SupportSQLiteStatement _stmt = __preparedStmtOfAddPenalty.acquire();
+    int _argIndex = 1;
+    _stmt.bindDouble(_argIndex, penalty);
+    _argIndex = 2;
+    _stmt.bindLong(_argIndex, id);
+    try {
+      __db.beginTransaction();
+      try {
+        _stmt.executeUpdateDelete();
+        __db.setTransactionSuccessful();
+      } finally {
+        __db.endTransaction();
+      }
+    } finally {
+      __preparedStmtOfAddPenalty.release(_stmt);
+    }
+  }
+
+  @Override
   public LiveData<List<Debtor>> getAllDebtorsAlphabetical() {
     final String _sql = "SELECT * FROM debtors ORDER BY name ASC";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
@@ -224,9 +249,10 @@ public final class DebtorDao_Impl implements DebtorDao {
           final int _cursorIndexOfName = CursorUtil.getColumnIndexOrThrow(_cursor, "name");
           final int _cursorIndexOfTotalAmount = CursorUtil.getColumnIndexOrThrow(_cursor, "totalAmount");
           final int _cursorIndexOfAmountPaid = CursorUtil.getColumnIndexOrThrow(_cursor, "amountPaid");
+          final int _cursorIndexOfInterestRate = CursorUtil.getColumnIndexOrThrow(_cursor, "interestRate");
+          final int _cursorIndexOfPenaltyAmount = CursorUtil.getColumnIndexOrThrow(_cursor, "penaltyAmount");
           final int _cursorIndexOfStartDate = CursorUtil.getColumnIndexOrThrow(_cursor, "startDate");
           final int _cursorIndexOfFullyPaidDate = CursorUtil.getColumnIndexOrThrow(_cursor, "fullyPaidDate");
-          final int _cursorIndexOfFingerprintKey = CursorUtil.getColumnIndexOrThrow(_cursor, "fingerprintKey");
           final int _cursorIndexOfNotes = CursorUtil.getColumnIndexOrThrow(_cursor, "notes");
           final int _cursorIndexOfIsFullyPaid = CursorUtil.getColumnIndexOrThrow(_cursor, "isFullyPaid");
           final List<Debtor> _result = new ArrayList<Debtor>(_cursor.getCount());
@@ -249,6 +275,12 @@ public final class DebtorDao_Impl implements DebtorDao {
             final double _tmpAmountPaid;
             _tmpAmountPaid = _cursor.getDouble(_cursorIndexOfAmountPaid);
             _item.setAmountPaid(_tmpAmountPaid);
+            final double _tmpInterestRate;
+            _tmpInterestRate = _cursor.getDouble(_cursorIndexOfInterestRate);
+            _item.setInterestRate(_tmpInterestRate);
+            final double _tmpPenaltyAmount;
+            _tmpPenaltyAmount = _cursor.getDouble(_cursorIndexOfPenaltyAmount);
+            _item.setPenaltyAmount(_tmpPenaltyAmount);
             final String _tmpStartDate;
             if (_cursor.isNull(_cursorIndexOfStartDate)) {
               _tmpStartDate = null;
@@ -263,13 +295,6 @@ public final class DebtorDao_Impl implements DebtorDao {
               _tmpFullyPaidDate = _cursor.getString(_cursorIndexOfFullyPaidDate);
             }
             _item.setFullyPaidDate(_tmpFullyPaidDate);
-            final String _tmpFingerprintKey;
-            if (_cursor.isNull(_cursorIndexOfFingerprintKey)) {
-              _tmpFingerprintKey = null;
-            } else {
-              _tmpFingerprintKey = _cursor.getString(_cursorIndexOfFingerprintKey);
-            }
-            _item.setFingerprintKey(_tmpFingerprintKey);
             final String _tmpNotes;
             if (_cursor.isNull(_cursorIndexOfNotes)) {
               _tmpNotes = null;
@@ -298,6 +323,84 @@ public final class DebtorDao_Impl implements DebtorDao {
   }
 
   @Override
+  public List<Debtor> getAllDebtorsSync() {
+    final String _sql = "SELECT * FROM debtors ORDER BY name ASC";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
+    __db.assertNotSuspendingTransaction();
+    final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+    try {
+      final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+      final int _cursorIndexOfName = CursorUtil.getColumnIndexOrThrow(_cursor, "name");
+      final int _cursorIndexOfTotalAmount = CursorUtil.getColumnIndexOrThrow(_cursor, "totalAmount");
+      final int _cursorIndexOfAmountPaid = CursorUtil.getColumnIndexOrThrow(_cursor, "amountPaid");
+      final int _cursorIndexOfInterestRate = CursorUtil.getColumnIndexOrThrow(_cursor, "interestRate");
+      final int _cursorIndexOfPenaltyAmount = CursorUtil.getColumnIndexOrThrow(_cursor, "penaltyAmount");
+      final int _cursorIndexOfStartDate = CursorUtil.getColumnIndexOrThrow(_cursor, "startDate");
+      final int _cursorIndexOfFullyPaidDate = CursorUtil.getColumnIndexOrThrow(_cursor, "fullyPaidDate");
+      final int _cursorIndexOfNotes = CursorUtil.getColumnIndexOrThrow(_cursor, "notes");
+      final int _cursorIndexOfIsFullyPaid = CursorUtil.getColumnIndexOrThrow(_cursor, "isFullyPaid");
+      final List<Debtor> _result = new ArrayList<Debtor>(_cursor.getCount());
+      while (_cursor.moveToNext()) {
+        final Debtor _item;
+        _item = new Debtor();
+        final long _tmpId;
+        _tmpId = _cursor.getLong(_cursorIndexOfId);
+        _item.setId(_tmpId);
+        final String _tmpName;
+        if (_cursor.isNull(_cursorIndexOfName)) {
+          _tmpName = null;
+        } else {
+          _tmpName = _cursor.getString(_cursorIndexOfName);
+        }
+        _item.setName(_tmpName);
+        final double _tmpTotalAmount;
+        _tmpTotalAmount = _cursor.getDouble(_cursorIndexOfTotalAmount);
+        _item.setTotalAmount(_tmpTotalAmount);
+        final double _tmpAmountPaid;
+        _tmpAmountPaid = _cursor.getDouble(_cursorIndexOfAmountPaid);
+        _item.setAmountPaid(_tmpAmountPaid);
+        final double _tmpInterestRate;
+        _tmpInterestRate = _cursor.getDouble(_cursorIndexOfInterestRate);
+        _item.setInterestRate(_tmpInterestRate);
+        final double _tmpPenaltyAmount;
+        _tmpPenaltyAmount = _cursor.getDouble(_cursorIndexOfPenaltyAmount);
+        _item.setPenaltyAmount(_tmpPenaltyAmount);
+        final String _tmpStartDate;
+        if (_cursor.isNull(_cursorIndexOfStartDate)) {
+          _tmpStartDate = null;
+        } else {
+          _tmpStartDate = _cursor.getString(_cursorIndexOfStartDate);
+        }
+        _item.setStartDate(_tmpStartDate);
+        final String _tmpFullyPaidDate;
+        if (_cursor.isNull(_cursorIndexOfFullyPaidDate)) {
+          _tmpFullyPaidDate = null;
+        } else {
+          _tmpFullyPaidDate = _cursor.getString(_cursorIndexOfFullyPaidDate);
+        }
+        _item.setFullyPaidDate(_tmpFullyPaidDate);
+        final String _tmpNotes;
+        if (_cursor.isNull(_cursorIndexOfNotes)) {
+          _tmpNotes = null;
+        } else {
+          _tmpNotes = _cursor.getString(_cursorIndexOfNotes);
+        }
+        _item.setNotes(_tmpNotes);
+        final boolean _tmpIsFullyPaid;
+        final int _tmp;
+        _tmp = _cursor.getInt(_cursorIndexOfIsFullyPaid);
+        _tmpIsFullyPaid = _tmp != 0;
+        _item.setFullyPaid(_tmpIsFullyPaid);
+        _result.add(_item);
+      }
+      return _result;
+    } finally {
+      _cursor.close();
+      _statement.release();
+    }
+  }
+
+  @Override
   public LiveData<Debtor> getDebtorById(final long id) {
     final String _sql = "SELECT * FROM debtors WHERE id = ?";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
@@ -313,9 +416,10 @@ public final class DebtorDao_Impl implements DebtorDao {
           final int _cursorIndexOfName = CursorUtil.getColumnIndexOrThrow(_cursor, "name");
           final int _cursorIndexOfTotalAmount = CursorUtil.getColumnIndexOrThrow(_cursor, "totalAmount");
           final int _cursorIndexOfAmountPaid = CursorUtil.getColumnIndexOrThrow(_cursor, "amountPaid");
+          final int _cursorIndexOfInterestRate = CursorUtil.getColumnIndexOrThrow(_cursor, "interestRate");
+          final int _cursorIndexOfPenaltyAmount = CursorUtil.getColumnIndexOrThrow(_cursor, "penaltyAmount");
           final int _cursorIndexOfStartDate = CursorUtil.getColumnIndexOrThrow(_cursor, "startDate");
           final int _cursorIndexOfFullyPaidDate = CursorUtil.getColumnIndexOrThrow(_cursor, "fullyPaidDate");
-          final int _cursorIndexOfFingerprintKey = CursorUtil.getColumnIndexOrThrow(_cursor, "fingerprintKey");
           final int _cursorIndexOfNotes = CursorUtil.getColumnIndexOrThrow(_cursor, "notes");
           final int _cursorIndexOfIsFullyPaid = CursorUtil.getColumnIndexOrThrow(_cursor, "isFullyPaid");
           final Debtor _result;
@@ -337,6 +441,12 @@ public final class DebtorDao_Impl implements DebtorDao {
             final double _tmpAmountPaid;
             _tmpAmountPaid = _cursor.getDouble(_cursorIndexOfAmountPaid);
             _result.setAmountPaid(_tmpAmountPaid);
+            final double _tmpInterestRate;
+            _tmpInterestRate = _cursor.getDouble(_cursorIndexOfInterestRate);
+            _result.setInterestRate(_tmpInterestRate);
+            final double _tmpPenaltyAmount;
+            _tmpPenaltyAmount = _cursor.getDouble(_cursorIndexOfPenaltyAmount);
+            _result.setPenaltyAmount(_tmpPenaltyAmount);
             final String _tmpStartDate;
             if (_cursor.isNull(_cursorIndexOfStartDate)) {
               _tmpStartDate = null;
@@ -351,13 +461,6 @@ public final class DebtorDao_Impl implements DebtorDao {
               _tmpFullyPaidDate = _cursor.getString(_cursorIndexOfFullyPaidDate);
             }
             _result.setFullyPaidDate(_tmpFullyPaidDate);
-            final String _tmpFingerprintKey;
-            if (_cursor.isNull(_cursorIndexOfFingerprintKey)) {
-              _tmpFingerprintKey = null;
-            } else {
-              _tmpFingerprintKey = _cursor.getString(_cursorIndexOfFingerprintKey);
-            }
-            _result.setFingerprintKey(_tmpFingerprintKey);
             final String _tmpNotes;
             if (_cursor.isNull(_cursorIndexOfNotes)) {
               _tmpNotes = null;
@@ -399,9 +502,10 @@ public final class DebtorDao_Impl implements DebtorDao {
       final int _cursorIndexOfName = CursorUtil.getColumnIndexOrThrow(_cursor, "name");
       final int _cursorIndexOfTotalAmount = CursorUtil.getColumnIndexOrThrow(_cursor, "totalAmount");
       final int _cursorIndexOfAmountPaid = CursorUtil.getColumnIndexOrThrow(_cursor, "amountPaid");
+      final int _cursorIndexOfInterestRate = CursorUtil.getColumnIndexOrThrow(_cursor, "interestRate");
+      final int _cursorIndexOfPenaltyAmount = CursorUtil.getColumnIndexOrThrow(_cursor, "penaltyAmount");
       final int _cursorIndexOfStartDate = CursorUtil.getColumnIndexOrThrow(_cursor, "startDate");
       final int _cursorIndexOfFullyPaidDate = CursorUtil.getColumnIndexOrThrow(_cursor, "fullyPaidDate");
-      final int _cursorIndexOfFingerprintKey = CursorUtil.getColumnIndexOrThrow(_cursor, "fingerprintKey");
       final int _cursorIndexOfNotes = CursorUtil.getColumnIndexOrThrow(_cursor, "notes");
       final int _cursorIndexOfIsFullyPaid = CursorUtil.getColumnIndexOrThrow(_cursor, "isFullyPaid");
       final Debtor _result;
@@ -423,6 +527,12 @@ public final class DebtorDao_Impl implements DebtorDao {
         final double _tmpAmountPaid;
         _tmpAmountPaid = _cursor.getDouble(_cursorIndexOfAmountPaid);
         _result.setAmountPaid(_tmpAmountPaid);
+        final double _tmpInterestRate;
+        _tmpInterestRate = _cursor.getDouble(_cursorIndexOfInterestRate);
+        _result.setInterestRate(_tmpInterestRate);
+        final double _tmpPenaltyAmount;
+        _tmpPenaltyAmount = _cursor.getDouble(_cursorIndexOfPenaltyAmount);
+        _result.setPenaltyAmount(_tmpPenaltyAmount);
         final String _tmpStartDate;
         if (_cursor.isNull(_cursorIndexOfStartDate)) {
           _tmpStartDate = null;
@@ -437,13 +547,6 @@ public final class DebtorDao_Impl implements DebtorDao {
           _tmpFullyPaidDate = _cursor.getString(_cursorIndexOfFullyPaidDate);
         }
         _result.setFullyPaidDate(_tmpFullyPaidDate);
-        final String _tmpFingerprintKey;
-        if (_cursor.isNull(_cursorIndexOfFingerprintKey)) {
-          _tmpFingerprintKey = null;
-        } else {
-          _tmpFingerprintKey = _cursor.getString(_cursorIndexOfFingerprintKey);
-        }
-        _result.setFingerprintKey(_tmpFingerprintKey);
         final String _tmpNotes;
         if (_cursor.isNull(_cursorIndexOfNotes)) {
           _tmpNotes = null;

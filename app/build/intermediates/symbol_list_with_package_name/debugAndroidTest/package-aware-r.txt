@@ -1,3 +1,0 @@
-com.redlab.utang.test
-style WhiteBackgroundDialogTheme
-style WhiteBackgroundTheme
