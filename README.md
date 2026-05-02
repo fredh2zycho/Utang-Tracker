@@ -63,7 +63,7 @@ The app has two tiers:
 ## 🛠️ Tech Stack
 
 - **Language:** Java
-- **Min SDK:** 26 (Android 8.0 Oreo)
+- **Min SDK:** 23 (Android 6.0 Marshmallow)
 - **Target SDK:** 34 (Android 14)
 - **Database:** Room (SQLite)
 - **Biometrics:** AndroidX Biometric library
@@ -84,7 +84,7 @@ The app has two tiers:
 
 1. Clone the repo:
    ```bash
-   git clone https://github.com/fredh2zycho/utang-tracker.git
+   git clone https://github.com/fredh2zycho/Utang-Tracker.git
    ```
 
 2. Open in Android Studio → File → Open → select `UtangApp`
@@ -280,8 +280,17 @@ MIT License — see [LICENSE](LICENSE) for details.
 ## 👨‍💻 Author
 
 **RedLab**
-- GitHub: [@fredh2zycho](https://github.com/fredh2zycho)
+- GitHub: [@fredh2zycho](https://github.com/fredh2zycho/Utang-Tracker)
 
 ---
 
 > *"Huwag kalimutang bayaran ang utang."* 😄
+
+### v3.0.0
+- ✅ **Removed biometric** — photo receipt with timestamp is the only receipt method
+- ✅ **Interest / Penalty system** — set monthly interest % per debtor; apply penalties manually with reason
+- ✅ **PDF Export** — export full payment history per debtor (ready to print, includes store logo)
+- ✅ **Backup & Restore** — save and restore the full SQLite database as a .db file
+- ✅ **GitHub update checker** — Settings links directly to GitHub releases page
+- ✅ **About App** — creator info, email contact, GitHub link inside Settings
+- ✅ Room database migration v1 → v2 (no data loss on upgrade)
