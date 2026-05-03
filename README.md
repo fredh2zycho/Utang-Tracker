@@ -119,7 +119,7 @@ UtangApp/
     │   └── StoreSettings.java       ← Store name + logo (Base64 PNG) persistence
     └── utils/
         ├── AdManager.java           ← Tracks last ad time, 2-hour interval logic
-        ├── BiometricHelper.java     ← Biometric prompt wrapper
+        ├── BiometricHelper.java     ← Biometric prompt wrapper(x)
         └── DateUtils.java           ← Date formatting utilities
 
 UtangKeygenApp/                      ← Separate companion app (internal use only)
