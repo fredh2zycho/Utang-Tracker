@@ -1372,10 +1372,10 @@
                     "from": {
                         "startLines": "2,9",
                         "startColumns": "4,4",
-                        "startOffsets": "55,395",
+                        "startOffsets": "57,404",
                         "endLines": "7,14",
                         "endColumns": "12,12",
-                        "endOffsets": "389,733"
+                        "endOffsets": "396,747"
                     },
                     "to": {
                         "startLines": "2145,5987",

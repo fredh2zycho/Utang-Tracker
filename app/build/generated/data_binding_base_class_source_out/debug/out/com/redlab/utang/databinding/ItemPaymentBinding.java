@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,22 +28,31 @@ public final class ItemPaymentBinding implements ViewBinding {
   public final ImageView ivReceiptPhoto;
 
   @NonNull
+  public final LinearLayout layoutNote;
+
+  @NonNull
   public final TextView tvPaymentAmount;
 
   @NonNull
   public final TextView tvPaymentDate;
 
   @NonNull
+  public final TextView tvPaymentNote;
+
+  @NonNull
   public final TextView tvReceiptType;
 
   private ItemPaymentBinding(@NonNull CardView rootView, @NonNull CardView cardPayment,
-      @NonNull ImageView ivReceiptPhoto, @NonNull TextView tvPaymentAmount,
-      @NonNull TextView tvPaymentDate, @NonNull TextView tvReceiptType) {
+      @NonNull ImageView ivReceiptPhoto, @NonNull LinearLayout layoutNote,
+      @NonNull TextView tvPaymentAmount, @NonNull TextView tvPaymentDate,
+      @NonNull TextView tvPaymentNote, @NonNull TextView tvReceiptType) {
     this.rootView = rootView;
     this.cardPayment = cardPayment;
     this.ivReceiptPhoto = ivReceiptPhoto;
+    this.layoutNote = layoutNote;
     this.tvPaymentAmount = tvPaymentAmount;
     this.tvPaymentDate = tvPaymentDate;
+    this.tvPaymentNote = tvPaymentNote;
     this.tvReceiptType = tvReceiptType;
   }
 
@@ -81,6 +91,12 @@ public final class ItemPaymentBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.layoutNote;
+      LinearLayout layoutNote = ViewBindings.findChildViewById(rootView, id);
+      if (layoutNote == null) {
+        break missingId;
+      }
+
       id = R.id.tvPaymentAmount;
       TextView tvPaymentAmount = ViewBindings.findChildViewById(rootView, id);
       if (tvPaymentAmount == null) {
@@ -93,14 +109,20 @@ public final class ItemPaymentBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tvPaymentNote;
+      TextView tvPaymentNote = ViewBindings.findChildViewById(rootView, id);
+      if (tvPaymentNote == null) {
+        break missingId;
+      }
+
       id = R.id.tvReceiptType;
       TextView tvReceiptType = ViewBindings.findChildViewById(rootView, id);
       if (tvReceiptType == null) {
         break missingId;
       }
 
-      return new ItemPaymentBinding((CardView) rootView, cardPayment, ivReceiptPhoto,
-          tvPaymentAmount, tvPaymentDate, tvReceiptType);
+      return new ItemPaymentBinding((CardView) rootView, cardPayment, ivReceiptPhoto, layoutNote,
+          tvPaymentAmount, tvPaymentDate, tvPaymentNote, tvReceiptType);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

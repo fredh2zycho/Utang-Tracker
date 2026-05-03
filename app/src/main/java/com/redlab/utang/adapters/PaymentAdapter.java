@@ -51,16 +51,19 @@ public class PaymentAdapter extends RecyclerView.Adapter<PaymentAdapter.PaymentV
 
     class PaymentViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
-        TextView tvAmount, tvDate, tvType;
+        TextView tvAmount, tvDate, tvType, tvPaymentNote;
         ImageView ivPhoto;
+        View layoutNote;
 
         PaymentViewHolder(@NonNull View v) {
             super(v);
-            cardView  = v.findViewById(R.id.cardPayment);
-            tvAmount  = v.findViewById(R.id.tvPaymentAmount);
-            tvDate    = v.findViewById(R.id.tvPaymentDate);
-            tvType    = v.findViewById(R.id.tvReceiptType);
-            ivPhoto   = v.findViewById(R.id.ivReceiptPhoto);
+            cardView      = v.findViewById(R.id.cardPayment);
+            tvAmount      = v.findViewById(R.id.tvPaymentAmount);
+            tvDate        = v.findViewById(R.id.tvPaymentDate);
+            tvType        = v.findViewById(R.id.tvReceiptType);
+            tvPaymentNote = v.findViewById(R.id.tvPaymentNote);
+            layoutNote    = v.findViewById(R.id.layoutNote);
+            ivPhoto       = v.findViewById(R.id.ivReceiptPhoto);
         }
 
         void bind(PaymentRecord pr) {
@@ -82,7 +85,6 @@ public class PaymentAdapter extends RecyclerView.Adapter<PaymentAdapter.PaymentV
                 tvType.setTextColor(Color.parseColor("#1565C0"));
                 cardView.setCardBackgroundColor(Color.WHITE);
 
-                // Load photo thumbnail
                 if (pr.getPhotoPath() != null && !pr.getPhotoPath().isEmpty()) {
                     File f = new File(pr.getPhotoPath());
                     if (f.exists()) {
@@ -99,6 +101,15 @@ public class PaymentAdapter extends RecyclerView.Adapter<PaymentAdapter.PaymentV
                 } else {
                     ivPhoto.setVisibility(View.GONE);
                 }
+            }
+
+            // Show payment note (items/products) for both payments and penalties
+            String note = pr.getPaymentNote();
+            if (note != null && !note.trim().isEmpty()) {
+                tvPaymentNote.setText(note);
+                layoutNote.setVisibility(View.VISIBLE);
+            } else {
+                layoutNote.setVisibility(View.GONE);
             }
         }
     }

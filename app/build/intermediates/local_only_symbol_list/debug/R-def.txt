@@ -15,6 +15,7 @@ drawable bg_badge
 drawable bg_circle
 drawable bg_circle_gray
 drawable bg_circle_white
+drawable bg_note
 drawable bg_search
 drawable ic_launcher_foreground
 drawable ic_splash_default
@@ -42,6 +43,7 @@ id etLicenseKey
 id etName
 id etNotes
 id etPaymentAmount
+id etPaymentNote
 id etPenaltyAmount
 id etPenaltyReason
 id etSearch
@@ -50,6 +52,7 @@ id fabAddDebtor
 id ivReceiptPhoto
 id ivSplashLogo
 id ivStoreLogo
+id layoutNote
 id layoutProSection
 id recyclerPayments
 id recyclerViewDebtors
@@ -69,6 +72,7 @@ id tvInterestInfo
 id tvLicenseInfo
 id tvPaymentAmount
 id tvPaymentDate
+id tvPaymentNote
 id tvPenaltyInfo
 id tvProBadge
 id tvProStatus

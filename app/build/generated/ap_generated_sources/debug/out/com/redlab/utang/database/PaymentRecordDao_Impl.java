@@ -36,7 +36,7 @@ public final class PaymentRecordDao_Impl implements PaymentRecordDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "INSERT OR ABORT INTO `payment_records` (`id`,`debtorId`,`amount`,`paymentDate`,`photoPath`,`recordType`) VALUES (nullif(?, 0),?,?,?,?,?)";
+        return "INSERT OR ABORT INTO `payment_records` (`id`,`debtorId`,`amount`,`paymentDate`,`photoPath`,`recordType`,`paymentNote`) VALUES (nullif(?, 0),?,?,?,?,?,?)";
       }
 
       @Override
@@ -59,6 +59,11 @@ public final class PaymentRecordDao_Impl implements PaymentRecordDao {
           statement.bindNull(6);
         } else {
           statement.bindString(6, entity.getRecordType());
+        }
+        if (entity.getPaymentNote() == null) {
+          statement.bindNull(7);
+        } else {
+          statement.bindString(7, entity.getPaymentNote());
         }
       }
     };
@@ -120,6 +125,7 @@ public final class PaymentRecordDao_Impl implements PaymentRecordDao {
           final int _cursorIndexOfPaymentDate = CursorUtil.getColumnIndexOrThrow(_cursor, "paymentDate");
           final int _cursorIndexOfPhotoPath = CursorUtil.getColumnIndexOrThrow(_cursor, "photoPath");
           final int _cursorIndexOfRecordType = CursorUtil.getColumnIndexOrThrow(_cursor, "recordType");
+          final int _cursorIndexOfPaymentNote = CursorUtil.getColumnIndexOrThrow(_cursor, "paymentNote");
           final List<PaymentRecord> _result = new ArrayList<PaymentRecord>(_cursor.getCount());
           while (_cursor.moveToNext()) {
             final PaymentRecord _item;
@@ -154,6 +160,13 @@ public final class PaymentRecordDao_Impl implements PaymentRecordDao {
               _tmpRecordType = _cursor.getString(_cursorIndexOfRecordType);
             }
             _item.setRecordType(_tmpRecordType);
+            final String _tmpPaymentNote;
+            if (_cursor.isNull(_cursorIndexOfPaymentNote)) {
+              _tmpPaymentNote = null;
+            } else {
+              _tmpPaymentNote = _cursor.getString(_cursorIndexOfPaymentNote);
+            }
+            _item.setPaymentNote(_tmpPaymentNote);
             _result.add(_item);
           }
           return _result;
@@ -184,6 +197,7 @@ public final class PaymentRecordDao_Impl implements PaymentRecordDao {
       final int _cursorIndexOfPaymentDate = CursorUtil.getColumnIndexOrThrow(_cursor, "paymentDate");
       final int _cursorIndexOfPhotoPath = CursorUtil.getColumnIndexOrThrow(_cursor, "photoPath");
       final int _cursorIndexOfRecordType = CursorUtil.getColumnIndexOrThrow(_cursor, "recordType");
+      final int _cursorIndexOfPaymentNote = CursorUtil.getColumnIndexOrThrow(_cursor, "paymentNote");
       final List<PaymentRecord> _result = new ArrayList<PaymentRecord>(_cursor.getCount());
       while (_cursor.moveToNext()) {
         final PaymentRecord _item;
@@ -218,6 +232,13 @@ public final class PaymentRecordDao_Impl implements PaymentRecordDao {
           _tmpRecordType = _cursor.getString(_cursorIndexOfRecordType);
         }
         _item.setRecordType(_tmpRecordType);
+        final String _tmpPaymentNote;
+        if (_cursor.isNull(_cursorIndexOfPaymentNote)) {
+          _tmpPaymentNote = null;
+        } else {
+          _tmpPaymentNote = _cursor.getString(_cursorIndexOfPaymentNote);
+        }
+        _item.setPaymentNote(_tmpPaymentNote);
         _result.add(_item);
       }
       return _result;
@@ -240,6 +261,7 @@ public final class PaymentRecordDao_Impl implements PaymentRecordDao {
       final int _cursorIndexOfPaymentDate = CursorUtil.getColumnIndexOrThrow(_cursor, "paymentDate");
       final int _cursorIndexOfPhotoPath = CursorUtil.getColumnIndexOrThrow(_cursor, "photoPath");
       final int _cursorIndexOfRecordType = CursorUtil.getColumnIndexOrThrow(_cursor, "recordType");
+      final int _cursorIndexOfPaymentNote = CursorUtil.getColumnIndexOrThrow(_cursor, "paymentNote");
       final List<PaymentRecord> _result = new ArrayList<PaymentRecord>(_cursor.getCount());
       while (_cursor.moveToNext()) {
         final PaymentRecord _item;
@@ -274,6 +296,13 @@ public final class PaymentRecordDao_Impl implements PaymentRecordDao {
           _tmpRecordType = _cursor.getString(_cursorIndexOfRecordType);
         }
         _item.setRecordType(_tmpRecordType);
+        final String _tmpPaymentNote;
+        if (_cursor.isNull(_cursorIndexOfPaymentNote)) {
+          _tmpPaymentNote = null;
+        } else {
+          _tmpPaymentNote = _cursor.getString(_cursorIndexOfPaymentNote);
+        }
+        _item.setPaymentNote(_tmpPaymentNote);
         _result.add(_item);
       }
       return _result;

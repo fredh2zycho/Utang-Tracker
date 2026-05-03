@@ -68,6 +68,10 @@
         "source": "com.redlab.utang.app-main-38:/drawable/bg_circle_gray.xml"
     },
     {
+        "merged": "com.redlab.utang.app-merged_res-36:/drawable_bg_note.xml.flat",
+        "source": "com.redlab.utang.app-main-38:/drawable/bg_note.xml"
+    },
+    {
         "merged": "com.redlab.utang.app-merged_res-36:/layout_item_debtor.xml.flat",
         "source": "com.redlab.utang.app-main-38:/layout/item_debtor.xml"
     },

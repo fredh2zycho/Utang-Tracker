@@ -60,6 +60,7 @@ public class DebtorDetailActivity extends AppCompatActivity {
     private Uri photoUri;
     private String currentPhotoPath;
     private double pendingPaymentAmount = 0;
+    private String pendingPaymentNote   = "";
     private ActivityResultLauncher<Intent> cameraLauncher;
 
     @Override
@@ -170,6 +171,12 @@ public class DebtorDetailActivity extends AppCompatActivity {
     private void showPaymentDialog() {
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_payment, null);
         EditText etAmount = dialogView.findViewById(R.id.etPaymentAmount);
+        EditText etNote   = dialogView.findViewById(R.id.etPaymentNote);
+
+        // Pre-fill note with debtor's original notes as reference
+        if (currentDebtor.getNotes() != null && !currentDebtor.getNotes().isEmpty()) {
+            etNote.setHint("Ref: " + currentDebtor.getNotes());
+        }
 
         new AlertDialog.Builder(this)
             .setTitle("📷 Magbayad (may Photo Receipt)")
@@ -194,6 +201,7 @@ public class DebtorDetailActivity extends AppCompatActivity {
                     return;
                 }
                 pendingPaymentAmount = amount;
+                pendingPaymentNote   = etNote.getText().toString().trim();
                 launchCamera();
             })
             .setNegativeButton("Kanselahin", null)
@@ -238,7 +246,7 @@ public class DebtorDetailActivity extends AppCompatActivity {
 
     private void applyPenalty(double penalty, String reason) {
         String date = DateUtils.getCurrentDateTimeISO();
-        PaymentRecord record = new PaymentRecord(debtorId, penalty, date, null, "PENALTY");
+        PaymentRecord record = new PaymentRecord(debtorId, penalty, date, null, "PENALTY", reason);
         AppDatabase db = AppDatabase.getInstance(this);
         executor.execute(() -> {
             db.paymentRecordDao().insert(record);
@@ -282,7 +290,7 @@ public class DebtorDetailActivity extends AppCompatActivity {
         if (currentPhotoPath == null || pendingPaymentAmount <= 0) return;
         String date = DateUtils.getCurrentDateTimeISO();
         PaymentRecord record = new PaymentRecord(debtorId, pendingPaymentAmount,
-            date, currentPhotoPath, "PAYMENT");
+            date, currentPhotoPath, "PAYMENT", pendingPaymentNote);
         AppDatabase db = AppDatabase.getInstance(this);
         executor.execute(() -> {
             db.paymentRecordDao().insert(record);
@@ -291,6 +299,7 @@ public class DebtorDetailActivity extends AppCompatActivity {
                 Toast.makeText(this, String.format("📷 ₱%.2f nai-record may photo receipt!",
                     pendingPaymentAmount), Toast.LENGTH_SHORT).show();
                 pendingPaymentAmount = 0;
+                pendingPaymentNote   = "";
                 currentPhotoPath = null;
             });
         });
