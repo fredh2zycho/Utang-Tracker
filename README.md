@@ -56,7 +56,12 @@ The app has two tiers:
 
 | Splash | Main List | Debtor Detail | Ad Screen | Settings |
 |---|---|---|---|---|
-| ![splash](#) | ![main](#) | ![detail](#) | ![ad](#) | ![settings](#) |
+| ![splash](<img width="720" height="1560" alt="splash" src="https://github.com/user-attachments/assets/fa8d3036-586a-47b1-8f2d-36f1f0c227fa" />
+#) | ![main](<img width="720" height="1560" alt="mainscreen" src="https://github.com/user-attachments/assets/99b92563-42d4-467d-92c8-a53ebfb39bcb" />
+#) | ![detail](<img width="720" height="1560" alt="addclient" src="https://github.com/user-attachments/assets/f7e8f9a3-f47a-4ef3-a48f-b9e26665fd2f" />
+#) | ![aboutapp](<img width="720" height="1560" alt="aboutapp" src="https://github.com/user-attachments/assets/7a880bfa-c6fa-42dd-84b4-d34408ef9708" />
+#) | ![settings](<img width="720" height="1560" alt="settingscreen" src="https://github.com/user-attachments/assets/76370ed7-6d51-49ef-a3b9-c4d9672bf3a7" />
+#) |
 
 ---
 
