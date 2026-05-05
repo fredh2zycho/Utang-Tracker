@@ -32,14 +32,14 @@ public final class AppDatabase_Impl extends AppDatabase {
   @Override
   @NonNull
   protected SupportSQLiteOpenHelper createOpenHelper(@NonNull final DatabaseConfiguration config) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(2) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(3) {
       @Override
       public void createAllTables(@NonNull final SupportSQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS `debtors` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `totalAmount` REAL NOT NULL, `amountPaid` REAL NOT NULL, `interestRate` REAL NOT NULL, `penaltyAmount` REAL NOT NULL, `startDate` TEXT, `fullyPaidDate` TEXT, `notes` TEXT, `isFullyPaid` INTEGER NOT NULL)");
-        db.execSQL("CREATE TABLE IF NOT EXISTS `payment_records` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `debtorId` INTEGER NOT NULL, `amount` REAL NOT NULL, `paymentDate` TEXT, `photoPath` TEXT, `recordType` TEXT, FOREIGN KEY(`debtorId`) REFERENCES `debtors`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `payment_records` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `debtorId` INTEGER NOT NULL, `amount` REAL NOT NULL, `paymentDate` TEXT, `photoPath` TEXT, `recordType` TEXT, `paymentNote` TEXT, FOREIGN KEY(`debtorId`) REFERENCES `debtors`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_payment_records_debtorId` ON `payment_records` (`debtorId`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f78cc7ebd6276c0b621c78f77e07af8d')");
+        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a7a46495a97f0def7ffab32cfa4b66c3')");
       }
 
       @Override
@@ -110,13 +110,14 @@ public final class AppDatabase_Impl extends AppDatabase {
                   + " Expected:\n" + _infoDebtors + "\n"
                   + " Found:\n" + _existingDebtors);
         }
-        final HashMap<String, TableInfo.Column> _columnsPaymentRecords = new HashMap<String, TableInfo.Column>(6);
+        final HashMap<String, TableInfo.Column> _columnsPaymentRecords = new HashMap<String, TableInfo.Column>(7);
         _columnsPaymentRecords.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsPaymentRecords.put("debtorId", new TableInfo.Column("debtorId", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsPaymentRecords.put("amount", new TableInfo.Column("amount", "REAL", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsPaymentRecords.put("paymentDate", new TableInfo.Column("paymentDate", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsPaymentRecords.put("photoPath", new TableInfo.Column("photoPath", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsPaymentRecords.put("recordType", new TableInfo.Column("recordType", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsPaymentRecords.put("paymentNote", new TableInfo.Column("paymentNote", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         final HashSet<TableInfo.ForeignKey> _foreignKeysPaymentRecords = new HashSet<TableInfo.ForeignKey>(1);
         _foreignKeysPaymentRecords.add(new TableInfo.ForeignKey("debtors", "CASCADE", "NO ACTION", Arrays.asList("debtorId"), Arrays.asList("id")));
         final HashSet<TableInfo.Index> _indicesPaymentRecords = new HashSet<TableInfo.Index>(1);
@@ -130,7 +131,7 @@ public final class AppDatabase_Impl extends AppDatabase {
         }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "f78cc7ebd6276c0b621c78f77e07af8d", "6f211796617aaff73f95b57f64bb3da7");
+    }, "a7a46495a97f0def7ffab32cfa4b66c3", "fa174732365af60440be9e8f9947c80e");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(config.context).name(config.name).callback(_openCallback).build();
     final SupportSQLiteOpenHelper _helper = config.sqliteOpenHelperFactory.create(_sqliteConfig);
     return _helper;

@@ -15,9 +15,12 @@ drawable bg_badge
 drawable bg_circle
 drawable bg_circle_gray
 drawable bg_circle_white
+drawable bg_note
 drawable bg_search
+drawable ic_launcher_background
 drawable ic_launcher_foreground
 drawable ic_splash_default
+drawable utang_tracker_logo
 id action_settings
 id adProgressBar
 id btnAbout
@@ -42,6 +45,7 @@ id etLicenseKey
 id etName
 id etNotes
 id etPaymentAmount
+id etPaymentNote
 id etPenaltyAmount
 id etPenaltyReason
 id etSearch
@@ -50,6 +54,7 @@ id fabAddDebtor
 id ivReceiptPhoto
 id ivSplashLogo
 id ivStoreLogo
+id layoutNote
 id layoutProSection
 id recyclerPayments
 id recyclerViewDebtors
@@ -69,6 +74,7 @@ id tvInterestInfo
 id tvLicenseInfo
 id tvPaymentAmount
 id tvPaymentDate
+id tvPaymentNote
 id tvPenaltyInfo
 id tvProBadge
 id tvProStatus
@@ -91,6 +97,7 @@ layout item_debtor
 layout item_payment
 menu main_menu
 mipmap ic_launcher
+mipmap ic_launcher_foreground
 mipmap ic_launcher_round
 string app_name
 style AppTheme

@@ -2981,6 +2981,7 @@ drawable bg_badge
 drawable bg_circle
 drawable bg_circle_gray
 drawable bg_circle_white
+drawable bg_note
 drawable bg_search
 drawable btn_checkbox_checked_mtrl
 drawable btn_checkbox_checked_to_unchecked_mtrl_animation
@@ -2999,6 +3000,7 @@ drawable ic_arrow_back_black_24
 drawable ic_clear_black_24
 drawable ic_clock_black_24dp
 drawable ic_keyboard_black_24dp
+drawable ic_launcher_background
 drawable ic_launcher_foreground
 drawable ic_m3_chip_check
 drawable ic_m3_chip_checked_circle
@@ -3083,6 +3085,7 @@ drawable notify_panel_notification_icon_bg
 drawable test_level_drawable
 drawable tooltip_frame_dark
 drawable tooltip_frame_light
+drawable utang_tracker_logo
 id ALT
 id BOTTOM_END
 id BOTTOM_START
@@ -3285,6 +3288,7 @@ id etLicenseKey
 id etName
 id etNotes
 id etPaymentAmount
+id etPaymentNote
 id etPenaltyAmount
 id etPenaltyReason
 id etSearch
@@ -3346,6 +3350,7 @@ id jumpToEnd
 id jumpToStart
 id labeled
 id layout
+id layoutNote
 id layoutProSection
 id left
 id leftToRight
@@ -3607,6 +3612,7 @@ id tvInterestInfo
 id tvLicenseInfo
 id tvPaymentAmount
 id tvPaymentDate
+id tvPaymentNote
 id tvPenaltyInfo
 id tvProBadge
 id tvProStatus
@@ -3843,6 +3849,7 @@ layout select_dialog_singlechoice_material
 layout support_simple_spinner_dropdown_item
 menu main_menu
 mipmap ic_launcher
+mipmap ic_launcher_foreground
 mipmap ic_launcher_round
 plurals mtrl_badge_content_description
 string abc_action_bar_home_description

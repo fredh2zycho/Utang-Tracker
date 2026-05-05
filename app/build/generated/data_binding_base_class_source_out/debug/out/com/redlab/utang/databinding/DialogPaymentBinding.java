@@ -22,9 +22,14 @@ public final class DialogPaymentBinding implements ViewBinding {
   @NonNull
   public final EditText etPaymentAmount;
 
-  private DialogPaymentBinding(@NonNull LinearLayout rootView, @NonNull EditText etPaymentAmount) {
+  @NonNull
+  public final EditText etPaymentNote;
+
+  private DialogPaymentBinding(@NonNull LinearLayout rootView, @NonNull EditText etPaymentAmount,
+      @NonNull EditText etPaymentNote) {
     this.rootView = rootView;
     this.etPaymentAmount = etPaymentAmount;
+    this.etPaymentNote = etPaymentNote;
   }
 
   @Override
@@ -60,7 +65,13 @@ public final class DialogPaymentBinding implements ViewBinding {
         break missingId;
       }
 
-      return new DialogPaymentBinding((LinearLayout) rootView, etPaymentAmount);
+      id = R.id.etPaymentNote;
+      EditText etPaymentNote = ViewBindings.findChildViewById(rootView, id);
+      if (etPaymentNote == null) {
+        break missingId;
+      }
+
+      return new DialogPaymentBinding((LinearLayout) rootView, etPaymentAmount, etPaymentNote);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

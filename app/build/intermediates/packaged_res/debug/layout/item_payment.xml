@@ -9,30 +9,88 @@
     app:cardCornerRadius="10dp"
     app:cardElevation="2dp">
 
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:orientation="vertical" android:padding="14dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="14dp">
 
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="horizontal" android:gravity="center_vertical">
-            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:orientation="vertical">
-                <TextView android:id="@+id/tvPaymentAmount"
-                    android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:textSize="18sp" android:textStyle="bold" android:textColor="@color/green_700"/>
-                <TextView android:id="@+id/tvPaymentDate"
-                    android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:textSize="12sp" android:textColor="@color/text_secondary"
+        <!-- Top row: amount + date -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvPaymentAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/green_700"/>
+
+                <TextView
+                    android:id="@+id/tvPaymentDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_secondary"
                     android:layout_marginTop="2dp"/>
-                <TextView android:id="@+id/tvReceiptType"
-                    android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:textSize="12sp" android:textColor="@color/primary"
+
+                <TextView
+                    android:id="@+id/tvReceiptType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@color/primary"
                     android:layout_marginTop="4dp"/>
             </LinearLayout>
         </LinearLayout>
 
-        <ImageView android:id="@+id/ivReceiptPhoto"
-            android:layout_width="match_parent" android:layout_height="180dp"
-            android:layout_marginTop="10dp" android:scaleType="centerCrop"
-            android:background="@color/bg_light" android:visibility="gone"/>
+        <!-- Notes / items covered by this payment -->
+        <LinearLayout
+            android:id="@+id/layoutNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/bg_note"
+            android:padding="8dp"
+            android:layout_marginTop="10dp"
+            android:gravity="top"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="📝 "
+                android:textSize="13sp"
+                android:paddingTop="1dp"/>
+
+            <TextView
+                android:id="@+id/tvPaymentNote"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="13sp"
+                android:textColor="#37474F"
+                android:lineSpacingExtra="2dp"/>
+        </LinearLayout>
+
+        <!-- Photo receipt thumbnail -->
+        <ImageView
+            android:id="@+id/ivReceiptPhoto"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:layout_marginTop="10dp"
+            android:scaleType="centerCrop"
+            android:background="@color/bg_light"
+            android:visibility="gone"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

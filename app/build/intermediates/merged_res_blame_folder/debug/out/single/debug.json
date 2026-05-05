@@ -1,5 +1,17 @@
 [
     {
+        "merged": "com.redlab.utang.app-merged_res-36:/mipmap-hdpi_ic_launcher_foreground.webp.flat",
+        "source": "com.redlab.utang.app-main-38:/mipmap-hdpi/ic_launcher_foreground.webp"
+    },
+    {
+        "merged": "com.redlab.utang.app-merged_res-36:/mipmap-mdpi_ic_launcher_foreground.webp.flat",
+        "source": "com.redlab.utang.app-main-38:/mipmap-mdpi/ic_launcher_foreground.webp"
+    },
+    {
+        "merged": "com.redlab.utang.app-merged_res-36:/mipmap-xxhdpi_ic_launcher_foreground.webp.flat",
+        "source": "com.redlab.utang.app-main-38:/mipmap-xxhdpi/ic_launcher_foreground.webp"
+    },
+    {
         "merged": "com.redlab.utang.app-merged_res-36:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
         "source": "com.redlab.utang.app-main-38:/mipmap-anydpi-v26/ic_launcher_round.xml"
     },
@@ -8,32 +20,8 @@
         "source": "com.redlab.utang.app-main-38:/layout/activity_main.xml"
     },
     {
-        "merged": "com.redlab.utang.app-merged_res-36:/mipmap-xhdpi_ic_launcher_round.xml.flat",
-        "source": "com.redlab.utang.app-main-38:/mipmap-xhdpi/ic_launcher_round.xml"
-    },
-    {
-        "merged": "com.redlab.utang.app-merged_res-36:/mipmap-hdpi_ic_launcher.xml.flat",
-        "source": "com.redlab.utang.app-main-38:/mipmap-hdpi/ic_launcher.xml"
-    },
-    {
-        "merged": "com.redlab.utang.app-merged_res-36:/mipmap-xxxhdpi_ic_launcher_round.xml.flat",
-        "source": "com.redlab.utang.app-main-38:/mipmap-xxxhdpi/ic_launcher_round.xml"
-    },
-    {
         "merged": "com.redlab.utang.app-merged_res-36:/drawable_ic_launcher_foreground.xml.flat",
         "source": "com.redlab.utang.app-main-38:/drawable/ic_launcher_foreground.xml"
-    },
-    {
-        "merged": "com.redlab.utang.app-merged_res-36:/mipmap-mdpi_ic_launcher_round.xml.flat",
-        "source": "com.redlab.utang.app-main-38:/mipmap-mdpi/ic_launcher_round.xml"
-    },
-    {
-        "merged": "com.redlab.utang.app-merged_res-36:/mipmap-xxxhdpi_ic_launcher.xml.flat",
-        "source": "com.redlab.utang.app-main-38:/mipmap-xxxhdpi/ic_launcher.xml"
-    },
-    {
-        "merged": "com.redlab.utang.app-merged_res-36:/mipmap-xhdpi_ic_launcher.xml.flat",
-        "source": "com.redlab.utang.app-main-38:/mipmap-xhdpi/ic_launcher.xml"
     },
     {
         "merged": "com.redlab.utang.app-merged_res-36:/drawable_bg_circle_white.xml.flat",
@@ -44,6 +32,18 @@
         "source": "com.redlab.utang.app-main-38:/layout/activity_ad.xml"
     },
     {
+        "merged": "com.redlab.utang.app-merged_res-36:/mipmap-xhdpi_ic_launcher_round.webp.flat",
+        "source": "com.redlab.utang.app-main-38:/mipmap-xhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.redlab.utang.app-merged_res-36:/mipmap-xxhdpi_ic_launcher.webp.flat",
+        "source": "com.redlab.utang.app-main-38:/mipmap-xxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.redlab.utang.app-merged_res-36:/mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "com.redlab.utang.app-main-38:/mipmap-hdpi/ic_launcher.webp"
+    },
+    {
         "merged": "com.redlab.utang.app-merged_res-36:/layout_dialog_payment.xml.flat",
         "source": "com.redlab.utang.app-main-38:/layout/dialog_payment.xml"
     },
@@ -52,8 +52,8 @@
         "source": "com.redlab.utang.app-main-38:/layout/item_payment.xml"
     },
     {
-        "merged": "com.redlab.utang.app-merged_res-36:/mipmap-hdpi_ic_launcher_round.xml.flat",
-        "source": "com.redlab.utang.app-main-38:/mipmap-hdpi/ic_launcher_round.xml"
+        "merged": "com.redlab.utang.app-merged_res-36:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
+        "source": "com.redlab.utang.app-main-38:/mipmap-xxxhdpi/ic_launcher_round.webp"
     },
     {
         "merged": "com.redlab.utang.app-merged_res-36:/layout_activity_settings.xml.flat",
@@ -68,6 +68,26 @@
         "source": "com.redlab.utang.app-main-38:/drawable/bg_circle_gray.xml"
     },
     {
+        "merged": "com.redlab.utang.app-merged_res-36:/mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "com.redlab.utang.app-main-38:/mipmap-xhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.redlab.utang.app-merged_res-36:/drawable_utang_tracker_logo.png.flat",
+        "source": "com.redlab.utang.app-main-38:/drawable/utang_tracker_logo.png"
+    },
+    {
+        "merged": "com.redlab.utang.app-merged_res-36:/mipmap-hdpi_ic_launcher_round.webp.flat",
+        "source": "com.redlab.utang.app-main-38:/mipmap-hdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.redlab.utang.app-merged_res-36:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
+        "source": "com.redlab.utang.app-main-38:/mipmap-xxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.redlab.utang.app-merged_res-36:/drawable_bg_note.xml.flat",
+        "source": "com.redlab.utang.app-main-38:/drawable/bg_note.xml"
+    },
+    {
         "merged": "com.redlab.utang.app-merged_res-36:/layout_item_debtor.xml.flat",
         "source": "com.redlab.utang.app-main-38:/layout/item_debtor.xml"
     },
@@ -76,20 +96,32 @@
         "source": "com.redlab.utang.app-main-38:/drawable/bg_search.xml"
     },
     {
-        "merged": "com.redlab.utang.app-merged_res-36:/drawable_bg_circle.xml.flat",
-        "source": "com.redlab.utang.app-main-38:/drawable/bg_circle.xml"
+        "merged": "com.redlab.utang.app-merged_res-36:/drawable_ic_launcher_background.xml.flat",
+        "source": "com.redlab.utang.app-main-38:/drawable/ic_launcher_background.xml"
     },
     {
-        "merged": "com.redlab.utang.app-merged_res-36:/mipmap-xxhdpi_ic_launcher_round.xml.flat",
-        "source": "com.redlab.utang.app-main-38:/mipmap-xxhdpi/ic_launcher_round.xml"
+        "merged": "com.redlab.utang.app-merged_res-36:/mipmap-xxxhdpi_ic_launcher.webp.flat",
+        "source": "com.redlab.utang.app-main-38:/mipmap-xxxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.redlab.utang.app-merged_res-36:/mipmap-xxxhdpi_ic_launcher_foreground.webp.flat",
+        "source": "com.redlab.utang.app-main-38:/mipmap-xxxhdpi/ic_launcher_foreground.webp"
+    },
+    {
+        "merged": "com.redlab.utang.app-merged_res-36:/mipmap-xhdpi_ic_launcher_foreground.webp.flat",
+        "source": "com.redlab.utang.app-main-38:/mipmap-xhdpi/ic_launcher_foreground.webp"
+    },
+    {
+        "merged": "com.redlab.utang.app-merged_res-36:/drawable_bg_circle.xml.flat",
+        "source": "com.redlab.utang.app-main-38:/drawable/bg_circle.xml"
     },
     {
         "merged": "com.redlab.utang.app-merged_res-36:/layout_activity_debtor_detail.xml.flat",
         "source": "com.redlab.utang.app-main-38:/layout/activity_debtor_detail.xml"
     },
     {
-        "merged": "com.redlab.utang.app-merged_res-36:/mipmap-mdpi_ic_launcher.xml.flat",
-        "source": "com.redlab.utang.app-main-38:/mipmap-mdpi/ic_launcher.xml"
+        "merged": "com.redlab.utang.app-merged_res-36:/mipmap-mdpi_ic_launcher_round.webp.flat",
+        "source": "com.redlab.utang.app-main-38:/mipmap-mdpi/ic_launcher_round.webp"
     },
     {
         "merged": "com.redlab.utang.app-merged_res-36:/layout_activity_add_debtor.xml.flat",
@@ -102,10 +134,6 @@
     {
         "merged": "com.redlab.utang.app-merged_res-36:/drawable_ic_splash_default.png.flat",
         "source": "com.redlab.utang.app-main-38:/drawable/ic_splash_default.png"
-    },
-    {
-        "merged": "com.redlab.utang.app-merged_res-36:/mipmap-xxhdpi_ic_launcher.xml.flat",
-        "source": "com.redlab.utang.app-main-38:/mipmap-xxhdpi/ic_launcher.xml"
     },
     {
         "merged": "com.redlab.utang.app-merged_res-36:/layout_activity_splash.xml.flat",
@@ -122,5 +150,9 @@
     {
         "merged": "com.redlab.utang.app-merged_res-36:/xml_file_paths.xml.flat",
         "source": "com.redlab.utang.app-main-38:/xml/file_paths.xml"
+    },
+    {
+        "merged": "com.redlab.utang.app-merged_res-36:/mipmap-mdpi_ic_launcher.webp.flat",
+        "source": "com.redlab.utang.app-main-38:/mipmap-mdpi/ic_launcher.webp"
     }
 ]

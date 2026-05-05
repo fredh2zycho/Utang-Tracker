@@ -24,19 +24,21 @@ public class PaymentRecord {
     private long debtorId;
     private double amount;
     private String paymentDate;
-    private String photoPath;       // path to timestamped photo receipt
-    private String recordType;      // "PAYMENT" or "PENALTY" or "INTEREST"
+    private String photoPath;
+    private String recordType;    // "PAYMENT" or "PENALTY"
+    private String paymentNote;   // items, products, or notes covered by this payment
 
     public PaymentRecord() {}
 
     @Ignore
     public PaymentRecord(long debtorId, double amount, String paymentDate,
-                         String photoPath, String recordType) {
+                         String photoPath, String recordType, String paymentNote) {
         this.debtorId    = debtorId;
         this.amount      = amount;
         this.paymentDate = paymentDate;
         this.photoPath   = photoPath;
         this.recordType  = recordType;
+        this.paymentNote = paymentNote;
     }
 
     public long getId() { return id; }
@@ -51,4 +53,6 @@ public class PaymentRecord {
     public void setPhotoPath(String photoPath) { this.photoPath = photoPath; }
     public String getRecordType() { return recordType; }
     public void setRecordType(String recordType) { this.recordType = recordType; }
+    public String getPaymentNote() { return paymentNote; }
+    public void setPaymentNote(String paymentNote) { this.paymentNote = paymentNote; }
 }

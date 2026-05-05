@@ -8,10 +8,10 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Halaga ng Bayad (₱)"
-        android:textSize="14sp"
+        android:text="Halaga ng Bayad (₱) *"
+        android:textSize="13sp"
         android:textColor="#555555"
-        android:layout_marginBottom="6dp" />
+        android:layout_marginBottom="4dp"/>
 
     <EditText
         android:id="@+id/etPaymentAmount"
@@ -19,8 +19,39 @@
         android:layout_height="wrap_content"
         android:hint="0.00"
         android:inputType="numberDecimal"
-        android:textSize="22sp"
+        android:textSize="26sp"
         android:textStyle="bold"
-        android:gravity="center" />
+        android:gravity="center"
+        android:layout_marginBottom="16dp"/>
+
+    <View android:layout_width="match_parent" android:layout_height="1dp"
+        android:background="#E0E0E0" android:layout_marginBottom="14dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="📝 Mga Item / Produkto na Binayaran"
+        android:textSize="13sp"
+        android:textColor="#555555"
+        android:layout_marginBottom="4dp"/>
+
+    <EditText
+        android:id="@+id/etPaymentNote"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="hal: 3 bag bigas, 2 lata sardinas, cash loan..."
+        android:inputType="textMultiLine|textCapSentences"
+        android:lines="3"
+        android:maxLines="5"
+        android:gravity="top"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ito ang lalabas sa payment history at sa PDF export."
+        android:textSize="11sp"
+        android:textColor="#9E9E9E"
+        android:layout_marginTop="4dp"/>
 
 </LinearLayout>
